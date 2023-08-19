@@ -4,6 +4,9 @@ const colors = require('tailwindcss/colors');
 module.exports = {
   darkMode: ['class'],
   content: ['./src/**/*.{ts,tsx}'],
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     extend: {
       fontFamily: {
