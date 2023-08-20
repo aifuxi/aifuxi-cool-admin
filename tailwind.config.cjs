@@ -2,7 +2,7 @@ const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['class'],
+  darkMode: ['class', '[arco-theme="dark"]'],
   content: ['./src/**/*.{ts,tsx}'],
   corePlugins: {
     preflight: false,

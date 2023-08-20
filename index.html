@@ -7,6 +7,20 @@
     <title>后台管理-aifuxi.cool</title>
   </head>
   <body>
+    <script>
+      // 防止切换主题时闪烁
+      (function () {
+        if (
+          localStorage.getItem('arco-theme') === 'dark' ||
+          (!('arco-theme' in localStorage) &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+          document.body.setAttribute('arco-theme', 'dark');
+        } else {
+          document.body.removeAttribute('arco-theme');
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

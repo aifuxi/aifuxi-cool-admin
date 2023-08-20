@@ -9,6 +9,8 @@ import {
   IconTagHorizontalBoldDuotone,
 } from '@/icons';
 
+import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
+
 const MenuItem = Menu.Item;
 // const SubMenu = Menu.SubMenu;
 const Sider = Layout.Sider;
@@ -26,7 +28,7 @@ const MainLayout = () => {
   }, [location]);
 
   return (
-    <Layout className="h-screen w-screen">
+    <Layout className="h-screen w-screen dark:bg-[var(--color-bg-1)]">
       <Sider collapsed={false} collapsible trigger={null} breakpoint="xl">
         <Typography.Title heading={4} className="text-center">
           F西后台管理系统
@@ -55,6 +57,7 @@ const MainLayout = () => {
       </Sider>
       <Layout>
         <Header className="h-[60px] flex items-center justify-end px-6 shadow-md">
+          <ThemeSwitcher />
           <Avatar>
             <img
               alt="avatar"
@@ -72,6 +75,5 @@ const MainLayout = () => {
     </Layout>
   );
 };
-<h2 className=""></h2>;
 
 export default MainLayout;
