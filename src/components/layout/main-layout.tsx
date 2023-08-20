@@ -2,9 +2,12 @@ import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import { Avatar, Layout, Menu, Typography } from '@arco-design/web-react';
-import { IconCalendar, IconHome } from '@arco-design/web-react/icon';
 
 import { ROUTE_PATH } from '@/constants/path';
+import {
+  IconHomeSmileBoldDuotone,
+  IconTagHorizontalBoldDuotone,
+} from '@/icons';
 
 const MenuItem = Menu.Item;
 // const SubMenu = Menu.SubMenu;
@@ -37,12 +40,16 @@ const MainLayout = () => {
           style={{ width: '100%' }}
         >
           <MenuItem key={ROUTE_PATH.HOME}>
-            <IconHome />
-            Home
+            <div className="w-full h-full flex items-center space-x-2">
+              <IconHomeSmileBoldDuotone className="text-xl" />
+              <span>Home</span>
+            </div>
           </MenuItem>
           <MenuItem key={ROUTE_PATH.TAG}>
-            <IconCalendar />
-            文章标签
+            <div className="w-full h-full flex items-center space-x-2">
+              <IconTagHorizontalBoldDuotone className="text-xl" />
+              <span>文章标签</span>
+            </div>
           </MenuItem>
         </Menu>
       </Sider>
