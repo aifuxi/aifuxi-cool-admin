@@ -1,5 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import NiceModal from '@ebay/nice-modal-react';
+
 import { ROUTE_PATH } from '@/constants/path';
 import Home from '@/pages/home/home';
 import Login from '@/pages/login/login';
@@ -30,9 +32,9 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <>
+    <NiceModal.Provider>
       <RouterProvider router={router} />
-    </>
+    </NiceModal.Provider>
   );
 }
 

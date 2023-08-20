@@ -6,3 +6,10 @@ export type Tag = {
   updated_at: string;
   deleted_at?: string;
 };
+
+export type CreateTagRequest = {
+  name: string;
+  friendly_url: string;
+};
+
+export type UpdateTagRequest = Partial<CreateTagRequest>;
