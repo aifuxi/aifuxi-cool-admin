@@ -47,7 +47,7 @@ const MainLayout = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="h-[60px] flex items-center justify-end px-6">
+        <Header className="h-[60px] flex items-center justify-end px-6 shadow-md">
           <Avatar>
             <img
               alt="avatar"
@@ -55,7 +55,7 @@ const MainLayout = () => {
             />
           </Avatar>
         </Header>
-        <Layout className="p-6">
+        <Layout className="px-6">
           <Content>
             <Outlet />
           </Content>
