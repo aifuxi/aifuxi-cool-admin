@@ -5,7 +5,7 @@ import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { REDIRECT } from '@/constants/unknow';
 
-import { getBearerToken } from './helper';
+import { getBearerToken, removeBearerToken } from './helper';
 import { obj2QueryString } from './url';
 
 export const x = axios.create({
@@ -15,8 +15,9 @@ export const x = axios.create({
 x.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    if (config.url?.includes('/auth')) {
-      config.headers.Authorization = getBearerToken();
+    const token = getBearerToken();
+    if (config.url?.includes('/auth') && token) {
+      config.headers.Authorization = token;
     }
     return config;
   },
@@ -32,11 +33,16 @@ x.interceptors.response.use(
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
     if (response.data.code !== CODE.Ok) {
-      Message.error(response.data.msg);
+      const needRedirectCode = [CODE.NoAuthorized, CODE.TokenExpired];
 
-      if (response.data.code === CODE.NoAuthorized) {
-        const query = obj2QueryString({ [REDIRECT]: location.pathname });
-        location.href = `${ROUTE_PATH.LOGIN}${query}`;
+      if (needRedirectCode.includes(response.data.code)) {
+        removeBearerToken();
+        Message.error(response.data.msg);
+
+        window.setTimeout(() => {
+          const query = obj2QueryString({ [REDIRECT]: location.pathname });
+          location.href = `${ROUTE_PATH.LOGIN}${query}`;
+        }, 1 * 1000);
       }
 
       return Promise.reject(new Error(response.data.msg));

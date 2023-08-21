@@ -14,3 +14,7 @@ export function getBearerToken() {
 
   return `Bearer ${localStorage.getItem(STORAGE_KEY.ACCESS_TOKEN)}`;
 }
+
+export function removeBearerToken() {
+  localStorage.setItem(STORAGE_KEY.ACCESS_TOKEN, '');
+}
