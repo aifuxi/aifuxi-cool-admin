@@ -1,9 +1,12 @@
-import { GeneralResponse } from '@/type';
+import { GeneralResponse, PaginationRequest, TotalResponse } from '@/type';
 import { CreateTagRequest, Tag, UpdateTagRequest } from '@/type/tag';
 import { x } from '@/utils/request';
+import { obj2QueryString } from '@/utils/url';
 
-export function getTags() {
-  return x.get('/auth/tags') as Promise<GeneralResponse<Tag[]>>;
+export function getTags(data: PaginationRequest) {
+  return x.get(`/auth/tags${obj2QueryString(data)}`) as Promise<
+    TotalResponse<Tag[]>
+  >;
 }
 
 export function createTag(data: CreateTagRequest) {

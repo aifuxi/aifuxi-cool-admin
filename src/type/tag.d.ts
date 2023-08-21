@@ -1,3 +1,5 @@
+import { PaginationRequest } from '.';
+
 export type Tag = {
   id: string;
   name: string;
@@ -6,6 +8,8 @@ export type Tag = {
   updated_at: string;
   deleted_at?: string;
 };
+
+export type GetTagRequest = PaginationRequest;
 
 export type CreateTagRequest = {
   name: string;

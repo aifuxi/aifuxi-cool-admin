@@ -15,3 +15,8 @@ export type GeneralResponse<T> = {
 export type TotalResponse<T> = GeneralResponse<T> & {
   total: number;
 };
+
+export type PaginationRequest = {
+  page: number;
+  page_size: number;
+};

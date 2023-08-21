@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import {
   Button,
   Message,
@@ -17,14 +19,18 @@ import {
   IconTrashBinTrashBoldDuotone,
 } from '@/icons';
 import { deleteTagByID, getTags } from '@/services/tag';
-import { Tag } from '@/type/tag';
+import { GetTagRequest, Tag } from '@/type/tag';
 
 import { CreateTagModal } from './create-tag-modal';
 
 const ButtonGroup = Button.Group;
 
 const TagPage = () => {
-  const { data, isLoading, mutate } = useSWR('/auth/tags', getTags);
+  const [req, setReq] = useState<GetTagRequest>({ page: 1, page_size: 10 });
+  const { data, isLoading, mutate } = useSWR(
+    '/auth/tags' + JSON.stringify(req),
+    () => getTags(req),
+  );
   const { loading: deleteLoading, runAsync: deleteTag } = useRequest(
     deleteTagByID,
     {
@@ -121,6 +127,17 @@ const TagPage = () => {
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}
+        pagination={{
+          total: data?.total,
+          showTotal: true,
+          current: req.page,
+          pageSize: req.page_size,
+          sizeCanChange: true,
+          pageSizeChangeResetCurrent: true,
+          onChange(pageNumber, pageSize) {
+            setReq({ page: pageNumber, page_size: pageSize });
+          },
+        }}
       />
     </div>
   );
