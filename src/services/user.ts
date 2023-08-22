@@ -9,6 +9,10 @@ export function getUsers(data: PaginationRequest) {
   >;
 }
 
+export function getUserProfile() {
+  return x.get('/auth/users/profile') as Promise<GeneralResponse<User>>;
+}
+
 export function createUser(data: CreateUserRequest) {
   return x.post('/auth/users', data) as Promise<GeneralResponse<User>>;
 }

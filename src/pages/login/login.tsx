@@ -3,11 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Form, Input, Message } from '@arco-design/web-react';
 
 import TechLifeManagementPng from '@/assets/images/tech-life-management.png';
+import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { STORAGE_KEY } from '@/constants/storage';
 import { REDIRECT } from '@/constants/unknow';
 import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/icons';
 import { signIn } from '@/services/auth';
+import { getUserProfile } from '@/services/user';
+import { useUserProfileStore } from '@/store/user-profile';
 import { SignInRequest } from '@/type';
 
 const FormItem = Form.Item;
@@ -16,6 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
+  const setUserProfile = useUserProfileStore((state) => state.setUserProfile);
 
   const redirectPath = searchParams.get(REDIRECT);
 
@@ -31,7 +35,7 @@ const Login = () => {
         layout="vertical"
         size="large"
         initialValues={
-          { email: '123@qq.com', password: '123456' } as SignInRequest
+          { email: 'aifuxi@qq.com', password: '123456' } as SignInRequest
         }
         autoComplete="off"
         onSubmit={async (v: SignInRequest) => {
@@ -41,14 +45,17 @@ const Login = () => {
               STORAGE_KEY.ACCESS_TOKEN,
               res.data.access_token,
             );
+            const userRes = await getUserProfile();
 
-            Message.success('登录成功');
-
-            if (redirectPath) {
-              navigate(redirectPath);
-            } else {
-              // 跳到首页去
-              navigate(ROUTE_PATH.HOME);
+            if (userRes.code === CODE.Ok && userRes.data) {
+              setUserProfile(userRes.data);
+              Message.success('登录成功');
+              if (redirectPath) {
+                navigate(redirectPath);
+              } else {
+                // 跳到首页去
+                navigate(ROUTE_PATH.HOME);
+              }
             }
           } else {
             Message.clear();

@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-import { Avatar, Layout, Menu, Typography } from '@arco-design/web-react';
+import {
+  Avatar,
+  Button,
+  Layout,
+  Menu,
+  Modal,
+  Trigger,
+  Typography,
+} from '@arco-design/web-react';
 
 import { ROUTE_PATH } from '@/constants/path';
 import {
@@ -9,6 +17,8 @@ import {
   IconTagHorizontalBoldDuotone,
   IconUserRoundedBoldDuotone,
 } from '@/icons';
+import { useUserProfileStore } from '@/store/user-profile';
+import { removeBearerToken } from '@/utils/helper';
 
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 
@@ -23,6 +33,10 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
+  const userProfile = useUserProfileStore((state) => state.user);
+  const clearUserProfile = useUserProfileStore(
+    (state) => state.clearUserProfile,
+  );
 
   useEffect(() => {
     setSelectedKeys([location.pathname]);
@@ -65,12 +79,39 @@ const MainLayout = () => {
       <Layout>
         <Header className="h-[60px] flex items-center justify-end px-6 shadow-md">
           <ThemeSwitcher />
-          <Avatar>
-            <img
-              alt="avatar"
-              src="https://aifuxi.oss-cn-shanghai.aliyuncs.com/self/avatar.jpeg"
-            />
-          </Avatar>
+          <Trigger
+            popup={() => (
+              <Button
+                status="danger"
+                onClick={() => {
+                  Modal.confirm({
+                    title: '温馨提示',
+                    content: `你确定要退出登录吗？`,
+                    okButtonProps: {
+                      status: 'danger',
+                    },
+                    onOk: async () => {
+                      clearUserProfile();
+                      removeBearerToken();
+                      navigate(ROUTE_PATH.LOGIN, { replace: true });
+                    },
+                  });
+                }}
+              >
+                退出登录
+              </Button>
+            )}
+            mouseEnterDelay={400}
+            mouseLeaveDelay={400}
+            position="bottom"
+            popupAlign={{
+              bottom: 20,
+            }}
+          >
+            <Avatar className="bg-[rgb(var(--primary-6))]">
+              {userProfile?.nickname || '未知用户'}
+            </Avatar>
+          </Trigger>
         </Header>
         <Layout className="px-6">
           <Content>
