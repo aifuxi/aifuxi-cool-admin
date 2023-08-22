@@ -9,11 +9,13 @@ export type Tag = {
   deleted_at?: string;
 };
 
-export type GetTagRequest = PaginationRequest & OrderRequest;
-
 export type CreateTagRequest = {
   name: string;
   friendly_url: string;
 };
+
+export type GetTagsRequest = PaginationRequest &
+  OrderRequest &
+  Partial<CreateTagRequest>;
 
 export type UpdateTagRequest = Partial<CreateTagRequest>;

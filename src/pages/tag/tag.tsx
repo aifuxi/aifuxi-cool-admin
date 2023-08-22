@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import {
   Button,
+  Form,
+  Input,
   Message,
   Modal,
   Table,
@@ -15,19 +17,24 @@ import useSWR from 'swr';
 import { CODE } from '@/constants/code';
 import {
   IconAddSquareBoldDuotone,
+  IconMinimalisticMagniferBoldDuotone,
   IconPenNewSquareBoldDuotone,
+  IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/icons';
 import { deleteTagByID, getTags } from '@/services/tag';
-import { GetTagRequest, Tag } from '@/type/tag';
+import { GetTagsRequest, Tag } from '@/type/tag';
 import { getTableOrder } from '@/utils/helper';
+import { formatTime } from '@/utils/time';
 
 import { CreateTagModal } from './create-tag-modal';
 
 const ButtonGroup = Button.Group;
+const FormItem = Form.Item;
 
 const TagPage = () => {
-  const [req, setReq] = useState<GetTagRequest>({
+  const [form] = Form.useForm();
+  const [req, setReq] = useState<GetTagsRequest>({
     page: 1,
     page_size: 10,
     order: 'desc',
@@ -61,7 +68,7 @@ const TagPage = () => {
       sorter: true,
       sortOrder: getTableOrder(req, 'created_at'),
       render: (_, record) => (
-        <Typography.Text>{record.created_at}</Typography.Text>
+        <Typography.Text>{formatTime(record.created_at)}</Typography.Text>
       ),
     },
     {
@@ -70,7 +77,7 @@ const TagPage = () => {
       sorter: true,
       sortOrder: getTableOrder(req, 'updated_at'),
       render: (_, record) => (
-        <Typography.Text>{record.updated_at}</Typography.Text>
+        <Typography.Text>{formatTime(record.updated_at)}</Typography.Text>
       ),
     },
     {
@@ -134,6 +141,56 @@ const TagPage = () => {
         </Button>
       </div>
 
+      <Form
+        form={form}
+        autoComplete="off"
+        layout="inline"
+        className="mb-2"
+        onSubmit={(v) => {
+          setReq({ ...req, ...v });
+        }}
+        onReset={() => {
+          form.resetFields();
+          setReq({
+            page: 1,
+            page_size: 10,
+            order: 'desc',
+            order_by: 'created_at',
+          });
+        }}
+      >
+        <FormItem label="标签名称" field="name">
+          <Input
+            className="w-[250px]"
+            placeholder="请输入标签名称..."
+            allowClear
+          />
+        </FormItem>
+        <FormItem label="标签friendly_url" field="friendly_url">
+          <Input
+            className="w-[250px]"
+            placeholder="请输入标签friendly_url..."
+            allowClear
+          />
+        </FormItem>
+        <FormItem>
+          <Button
+            htmlType="submit"
+            type="primary"
+            icon={<IconMinimalisticMagniferBoldDuotone />}
+          >
+            搜索
+          </Button>
+          <Button
+            htmlType="reset"
+            className="ml-2"
+            icon={<IconRestartSquareBoldDuotone />}
+          >
+            重置
+          </Button>
+        </FormItem>
+      </Form>
+
       <Table
         loading={isLoading}
         rowKey={(record) => record.id}
@@ -172,7 +229,7 @@ const TagPage = () => {
           } else {
             setReq({
               ...req,
-              order_by: field as GetTagRequest['order_by'],
+              order_by: field as GetTagsRequest['order_by'],
               order: 'desc',
             });
           }
