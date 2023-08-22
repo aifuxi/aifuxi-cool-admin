@@ -1,4 +1,4 @@
-import { PaginationRequest } from '.';
+import { OrderRequest, PaginationRequest } from '.';
 
 export type Tag = {
   id: string;
@@ -9,7 +9,7 @@ export type Tag = {
   deleted_at?: string;
 };
 
-export type GetTagRequest = PaginationRequest;
+export type GetTagRequest = PaginationRequest & OrderRequest;
 
 export type CreateTagRequest = {
   name: string;

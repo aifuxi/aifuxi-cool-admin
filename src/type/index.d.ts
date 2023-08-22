@@ -20,3 +20,8 @@ export type PaginationRequest = {
   page: number;
   page_size: number;
 };
+
+export type OrderRequest = {
+  order: 'desc' | 'asc';
+  order_by: 'created_at' | 'updated_at';
+};
