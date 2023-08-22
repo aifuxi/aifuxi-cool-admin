@@ -22,45 +22,45 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/icons';
-import { deleteTagByID, getTags } from '@/services/tag';
-import { GetTagsRequest, Tag } from '@/type/tag';
+import { deleteUserByID, getUsers } from '@/services/user';
+import { GetUsersRequest, User } from '@/type/user';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
 
-import { CreateTagModal } from './create-tag-modal';
+import { CreateUserModal } from './create-user-modal';
 
 const ButtonGroup = Button.Group;
 const FormItem = Form.Item;
 
-const TagPage = () => {
+const UserPage = () => {
   const [form] = Form.useForm();
-  const [req, setReq] = useState<GetTagsRequest>({
+  const [req, setReq] = useState<GetUsersRequest>({
     page: 1,
     page_size: 10,
     order: 'desc',
     order_by: 'created_at',
   });
   const { data, isLoading, mutate } = useSWR(
-    '/auth/tags' + JSON.stringify(req),
-    () => getTags(req),
+    '/auth/users' + JSON.stringify(req),
+    () => getUsers(req),
   );
-  const { loading: deleteLoading, runAsync: deleteTag } = useRequest(
-    deleteTagByID,
+  const { loading: deleteLoading, runAsync: deleteUser } = useRequest(
+    deleteUserByID,
     {
       manual: true,
     },
   );
 
-  const columns: TableColumnProps<Tag>[] = [
+  const columns: TableColumnProps<User>[] = [
     {
-      title: '标签名称',
-      render: (_, record) => <Typography.Text>{record.name}</Typography.Text>,
+      title: '昵称',
+      render: (_, record) => (
+        <Typography.Text>{record.nickname}</Typography.Text>
+      ),
     },
     {
-      title: 'friendly_url',
-      render: (_, record) => (
-        <Typography.Text>{record.friendly_url}</Typography.Text>
-      ),
+      title: '邮箱',
+      render: (_, record) => <Typography.Text>{record.email}</Typography.Text>,
     },
     {
       title: '创建时间',
@@ -88,7 +88,7 @@ const TagPage = () => {
             type="text"
             icon={<IconPenNewSquareBoldDuotone />}
             onClick={() => {
-              NiceModal.show(CreateTagModal, { record, refresh: mutate });
+              NiceModal.show(CreateUserModal, { record, refresh: mutate });
             }}
           >
             编辑
@@ -100,13 +100,13 @@ const TagPage = () => {
             onClick={() => {
               Modal.confirm({
                 title: '温馨提示',
-                content: `你确定要删除标签【${record.name}】吗？`,
+                content: `你确定要删除用户【${record.nickname}】吗？`,
                 confirmLoading: deleteLoading,
                 okButtonProps: {
                   status: 'danger',
                 },
                 onOk: async () => {
-                  const res = await deleteTag(record.id);
+                  const res = await deleteUser(record.id);
                   if (res.code === CODE.Ok) {
                     Message.success('删除成功');
                     mutate();
@@ -125,7 +125,7 @@ const TagPage = () => {
   return (
     <div>
       <Typography.Title heading={2} bold>
-        标签管理
+        用户管理
       </Typography.Title>
 
       <div className="mb-4">
@@ -134,10 +134,10 @@ const TagPage = () => {
           icon={<IconAddSquareBoldDuotone />}
           size="large"
           onClick={() => {
-            NiceModal.show(CreateTagModal, { refresh: mutate });
+            NiceModal.show(CreateUserModal, { refresh: mutate });
           }}
         >
-          创建标签
+          创建用户
         </Button>
       </div>
 
@@ -159,17 +159,17 @@ const TagPage = () => {
           });
         }}
       >
-        <FormItem label="标签名称" field="name">
+        <FormItem label="用户昵称" field="nickname">
           <Input
             className="w-[250px]"
-            placeholder="请输入标签名称..."
+            placeholder="请输入用户昵称..."
             allowClear
           />
         </FormItem>
-        <FormItem label="标签friendly_url" field="friendly_url">
+        <FormItem label="用户邮箱" field="email">
           <Input
             className="w-[250px]"
-            placeholder="请输入标签friendly_url..."
+            placeholder="请输入用户邮箱..."
             allowClear
           />
         </FormItem>
@@ -229,7 +229,7 @@ const TagPage = () => {
           } else {
             setReq({
               ...req,
-              order_by: field as GetTagsRequest['order_by'],
+              order_by: field as GetUsersRequest['order_by'],
               order: 'desc',
             });
           }
@@ -239,4 +239,4 @@ const TagPage = () => {
   );
 };
 
-export default TagPage;
+export default UserPage;

@@ -9,6 +9,7 @@ import { IconRestartSquareBoldDuotone } from './icon-restart';
 import { IconSunFogBoldDuotone } from './icon-sun';
 import { IconTagHorizontalBoldDuotone } from './icon-tag';
 import { IconTrashBinTrashBoldDuotone } from './icon-trash';
+import { IconUserRoundedBoldDuotone } from './icon-user';
 
 export {
   IconLetterBoldDuotone,
@@ -22,4 +23,5 @@ export {
   IconTrashBinTrashBoldDuotone,
   IconRestartSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
+  IconUserRoundedBoldDuotone,
 };

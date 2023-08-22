@@ -7,7 +7,8 @@ import Home from '@/pages/home/home';
 import Login from '@/pages/login/login';
 
 import MainLayout from './components/layout/main-layout';
-import Tag from './pages/tag/tag';
+import TagPage from './pages/tag/tag';
+import UserPage from './pages/user/user';
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.TAG,
-        element: <Tag />,
+        element: <TagPage />,
+      },
+      {
+        path: ROUTE_PATH.USER,
+        element: <UserPage />,
       },
     ],
   },

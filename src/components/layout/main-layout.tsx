@@ -7,6 +7,7 @@ import { ROUTE_PATH } from '@/constants/path';
 import {
   IconHomeSmileBoldDuotone,
   IconTagHorizontalBoldDuotone,
+  IconUserRoundedBoldDuotone,
 } from '@/icons';
 
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
@@ -50,7 +51,13 @@ const MainLayout = () => {
           <MenuItem key={ROUTE_PATH.TAG}>
             <div className="w-full h-full flex items-center space-x-2">
               <IconTagHorizontalBoldDuotone className="text-xl" />
-              <span>文章标签</span>
+              <span>标签管理</span>
+            </div>
+          </MenuItem>
+          <MenuItem key={ROUTE_PATH.USER}>
+            <div className="w-full h-full flex items-center space-x-2">
+              <IconUserRoundedBoldDuotone className="text-xl" />
+              <span>用户管理</span>
             </div>
           </MenuItem>
         </Menu>
