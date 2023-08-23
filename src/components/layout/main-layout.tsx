@@ -14,6 +14,7 @@ import {
 import { ROUTE_PATH } from '@/constants/path';
 import {
   IconHomeSmileBoldDuotone,
+  IconNotebookBoldDuotone,
   IconTagHorizontalBoldDuotone,
   IconUserRoundedBoldDuotone,
 } from '@/icons';
@@ -23,7 +24,7 @@ import { removeBearerToken } from '@/utils/helper';
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 
 const MenuItem = Menu.Item;
-// const SubMenu = Menu.SubMenu;
+const SubMenu = Menu.SubMenu;
 const Sider = Layout.Sider;
 const Header = Layout.Header;
 const Footer = Layout.Footer;
@@ -68,6 +69,26 @@ const MainLayout = () => {
               <span>标签管理</span>
             </div>
           </MenuItem>
+          <SubMenu
+            key={ROUTE_PATH.ARTICLE}
+            title={
+              <div className="w-full h-full flex items-center space-x-2">
+                <IconNotebookBoldDuotone className="text-xl" />
+                <span>文章管理</span>
+              </div>
+            }
+          >
+            <MenuItem key={ROUTE_PATH.ARTICLE_LIST}>
+              <div className="w-full h-full flex items-center space-x-2">
+                <span>文章列表</span>
+              </div>
+            </MenuItem>
+            <MenuItem key={ROUTE_PATH.ARTICLE_CREATE}>
+              <div className="w-full h-full flex items-center space-x-2">
+                <span>创建文章</span>
+              </div>
+            </MenuItem>
+          </SubMenu>
           <MenuItem key={ROUTE_PATH.USER}>
             <div className="w-full h-full flex items-center space-x-2">
               <IconUserRoundedBoldDuotone className="text-xl" />

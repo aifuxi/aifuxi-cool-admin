@@ -4,6 +4,7 @@ import { IconLetterBoldDuotone } from './icon-letter';
 import { IconLockBoldDuotone } from './icon-lock';
 import { IconMinimalisticMagniferBoldDuotone } from './icon-magnifer';
 import { IconMoonFogBoldDuotone } from './icon-moon';
+import { IconNotebookBoldDuotone } from './icon-notebook';
 import { IconPenNewSquareBoldDuotone } from './icon-pen';
 import { IconRestartSquareBoldDuotone } from './icon-restart';
 import { IconSunFogBoldDuotone } from './icon-sun';
@@ -24,4 +25,5 @@ export {
   IconRestartSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
   IconUserRoundedBoldDuotone,
+  IconNotebookBoldDuotone,
 };
