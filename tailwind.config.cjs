@@ -1,8 +1,10 @@
 const colors = require('tailwindcss/colors');
+const { preset } = require('twin.arco');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class', '[arco-theme="dark"]'],
+  presets: [preset()],
   content: ['./src/**/*.{ts,tsx}'],
   corePlugins: {
     preflight: false,
@@ -50,4 +52,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require('@tailwindcss/typography')],
 };

@@ -44,7 +44,7 @@ const MainLayout = () => {
   }, [location]);
 
   return (
-    <Layout className="h-screen w-screen dark:bg-[var(--color-bg-1)]">
+    <Layout className="h-screen w-screen bg-arco-bg-1">
       <Sider collapsed={false} collapsible trigger={null} breakpoint="xl">
         <Typography.Title heading={4} className="text-center">
           F西后台管理系统
@@ -98,7 +98,7 @@ const MainLayout = () => {
         </Menu>
       </Sider>
       <Layout>
-        <Header className="h-[60px] flex items-center justify-end px-6 shadow-md">
+        <Header className="h-[60px] flex items-center justify-end px-6 shadow-md sticky top-0 bg-arco-bg-1 z-[1]">
           <ThemeSwitcher />
           <Trigger
             popup={() => (

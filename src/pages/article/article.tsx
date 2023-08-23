@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -16,6 +17,7 @@ import { useRequest } from 'ahooks';
 import useSWR from 'swr';
 
 import { CODE } from '@/constants/code';
+import { ROUTE_PATH } from '@/constants/path';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
@@ -33,6 +35,7 @@ const FormItem = Form.Item;
 
 const ArticlePage = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [req, setReq] = useState<GetArticlesRequest>({
     page: 1,
     page_size: 10,
@@ -111,7 +114,11 @@ const ArticlePage = () => {
           <Button
             type="text"
             icon={<IconPenNewSquareBoldDuotone />}
-            onClick={() => {}}
+            onClick={() => {
+              navigate(
+                generatePath(`${ROUTE_PATH.ARTICLE_CREATE}/${record.id}`),
+              );
+            }}
           >
             编辑
           </Button>
@@ -155,7 +162,9 @@ const ArticlePage = () => {
           type="primary"
           icon={<IconAddSquareBoldDuotone />}
           size="large"
-          onClick={() => {}}
+          onClick={() => {
+            navigate(ROUTE_PATH.ARTICLE_CREATE);
+          }}
         >
           创建文章
         </Button>

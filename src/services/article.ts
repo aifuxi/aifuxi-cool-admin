@@ -12,6 +12,9 @@ export function getArticles(data: PaginationRequest) {
     TotalResponse<Article[]>
   >;
 }
+export function getArticleByID(id: string) {
+  return x.get(`/auth/articles/${id}`) as Promise<GeneralResponse<Article>>;
+}
 
 export function createArticle(data: CreateArticleRequest) {
   return x.post('/auth/articles', data) as Promise<GeneralResponse<Article>>;

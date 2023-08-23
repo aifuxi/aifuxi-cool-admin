@@ -8,7 +8,7 @@ import Login from '@/pages/login/login';
 
 import MainLayout from './components/layout/main-layout';
 import ArticlePage from './pages/article/article';
-import ArticleCreatePage from './pages/article/article_create';
+import ArticleCreatePage from './pages/article/article-create';
 import TagPage from './pages/tag/tag';
 import UserPage from './pages/user/user';
 
@@ -35,6 +35,10 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.ARTICLE_CREATE,
+        element: <ArticleCreatePage />,
+      },
+      {
+        path: `${ROUTE_PATH.ARTICLE_CREATE}/:id`,
         element: <ArticleCreatePage />,
       },
       {
