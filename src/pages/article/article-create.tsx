@@ -14,6 +14,7 @@ import { useRequest } from 'ahooks';
 import useSWR from 'swr';
 
 import { BytemdEditor } from '@/components/bytemd';
+import UploadField from '@/components/upload-field/upload-field';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import {
@@ -105,7 +106,8 @@ const ArticleCreatePage = () => {
           <Input.TextArea placeholder="请输入文章描述" />
         </FormItem>
         <FormItem label="文章封面" field="cover">
-          <Input placeholder="请输入文章 文章封面" />
+          {/* <Input placeholder="请输入文章 文章封面" /> */}
+          <UploadField />
         </FormItem>
         <FormItem label="是否置顶" field="is_top">
           <Switch />
