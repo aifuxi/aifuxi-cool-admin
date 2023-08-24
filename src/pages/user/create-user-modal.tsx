@@ -2,6 +2,7 @@ import { Button, Form, Input, Message, Modal } from '@arco-design/web-react';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { useRequest } from 'ahooks';
 
+import UploadField from '@/components/upload-field/upload-field';
 import { CODE } from '@/constants/code';
 import { createUser, updateUserByID } from '@/services/user';
 import { CreateUserRequest, UpdateUserRequest, User } from '@/type/user';
@@ -68,19 +69,30 @@ export const CreateUserModal = NiceModal.create(
             }
           }}
         >
-          <FormItem label="昵称" field="nickname" rules={[{ required: true }]}>
+          <FormItem
+            label="昵称"
+            field="nickname"
+            rules={[{ required: !isEdit }]}
+          >
             <Input placeholder="请输入用户昵称" />
           </FormItem>
-          <FormItem label="email" field="email" rules={[{ required: true }]}>
+          <FormItem label="头像" field="avatar">
+            <UploadField />
+          </FormItem>
+          <FormItem label="email" field="email" rules={[{ required: !isEdit }]}>
             <Input placeholder="请输入用户邮箱" />
           </FormItem>
-          <FormItem label="密码" field="password" rules={[{ required: true }]}>
+          <FormItem
+            label="密码"
+            field="password"
+            rules={[{ required: !isEdit }]}
+          >
             <Input.Password placeholder="请输入密码" />
           </FormItem>
           <FormItem
             label="确认密码"
             field="re_password"
-            rules={[{ required: true }]}
+            rules={[{ required: !isEdit }]}
           >
             <Input.Password placeholder="请输入再次输入密码" />
           </FormItem>

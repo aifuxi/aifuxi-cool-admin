@@ -3,6 +3,7 @@ import { useState } from 'react';
 import {
   Button,
   Form,
+  Image,
   Input,
   Message,
   Modal,
@@ -61,6 +62,15 @@ const UserPage = () => {
     {
       title: '邮箱',
       render: (_, record) => <Typography.Text>{record.email}</Typography.Text>,
+    },
+    {
+      title: '头像',
+      render: (_, record) =>
+        record.avatar ? (
+          <Image width={80} src={record.avatar} alt={record.nickname} />
+        ) : (
+          <Typography.Text>-</Typography.Text>
+        ),
     },
     {
       title: '创建时间',

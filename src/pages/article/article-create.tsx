@@ -106,7 +106,6 @@ const ArticleCreatePage = () => {
           <Input.TextArea placeholder="请输入文章描述" />
         </FormItem>
         <FormItem label="文章封面" field="cover">
-          {/* <Input placeholder="请输入文章 文章封面" /> */}
           <UploadField />
         </FormItem>
         <FormItem label="是否置顶" field="is_top">

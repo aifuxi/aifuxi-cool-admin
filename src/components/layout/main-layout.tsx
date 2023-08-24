@@ -130,7 +130,11 @@ const MainLayout = () => {
             }}
           >
             <Avatar className="bg-[rgb(var(--primary-6))]">
-              {userProfile?.nickname || '未知用户'}
+              {userProfile?.avatar ? (
+                <img alt={userProfile?.nickname} src={userProfile?.avatar} />
+              ) : (
+                userProfile?.nickname || '未知用户'
+              )}
             </Avatar>
           </Trigger>
         </Header>
