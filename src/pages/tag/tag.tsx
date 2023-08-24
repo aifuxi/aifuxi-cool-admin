@@ -109,7 +109,11 @@ const TagPage = () => {
                   const res = await deleteTag(record.id);
                   if (res.code === CODE.Ok) {
                     Message.success('删除成功');
-                    mutate();
+
+                    const currentPageRes = await mutate();
+                    if (!currentPageRes?.data?.length) {
+                      setReq({ ...req, page: req.page - 1 });
+                    }
                   }
                 },
               });
