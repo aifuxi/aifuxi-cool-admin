@@ -34,10 +34,10 @@ x.interceptors.response.use(
     // Do something with response data
     if (response.data.code !== CODE.Ok) {
       const needRedirectCode = [CODE.NoAuthorized, CODE.TokenExpired];
+      Message.error(response.data.msg);
 
       if (needRedirectCode.includes(response.data.code)) {
         removeBearerToken();
-        Message.error(response.data.msg);
 
         window.setTimeout(() => {
           const query = obj2QueryString({ [REDIRECT]: location.pathname });
