@@ -192,10 +192,10 @@ const ArticlePage = () => {
           });
         }}
       >
-        <FormItem label="文章名称" field="title">
+        <FormItem label="文章标题" field="title">
           <Input
             className="w-[250px]"
-            placeholder="请输入文章名称..."
+            placeholder="请输入文章标题..."
             allowClear
           />
         </FormItem>
