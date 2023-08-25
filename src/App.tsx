@@ -3,19 +3,18 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import NiceModal from '@ebay/nice-modal-react';
 
 import { ROUTE_PATH } from '@/constants/path';
-import Home from '@/pages/home/home';
-import Login from '@/pages/login/login';
 
-import MainLayout from './components/layout/main-layout';
-import ArticlePage from './pages/article/article';
-import ArticleCreatePage from './pages/article/article-create';
-import TagPage from './pages/tag/tag';
-import UserPage from './pages/user/user';
+import { MainLayout } from './components/layouts';
+import { ArticleCreateOrEditPage, ArticlePage } from './features/article';
+import { HomePage } from './features/home';
+import { LoginPage } from './features/login';
+import { TagPage } from './features/tag';
+import { UserPage } from './features/user';
 
 const router = createBrowserRouter([
   {
     path: ROUTE_PATH.LOGIN,
-    element: <Login />,
+    element: <LoginPage />,
   },
   {
     path: ROUTE_PATH.HOME,
@@ -23,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: ROUTE_PATH.HOME,
-        element: <Home />,
+        element: <HomePage />,
       },
       {
         path: ROUTE_PATH.TAG,
@@ -35,11 +34,11 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_PATH.ARTICLE_CREATE,
-        element: <ArticleCreatePage />,
+        element: <ArticleCreateOrEditPage />,
       },
       {
         path: `${ROUTE_PATH.ARTICLE_CREATE}/:id`,
-        element: <ArticleCreatePage />,
+        element: <ArticleCreateOrEditPage />,
       },
       {
         path: ROUTE_PATH.USER,

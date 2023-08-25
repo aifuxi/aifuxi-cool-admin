@@ -11,13 +11,13 @@ import {
   Typography,
 } from '@arco-design/web-react';
 
-import { ROUTE_PATH } from '@/constants/path';
 import {
   IconHomeSmileBoldDuotone,
   IconNotebookBoldDuotone,
   IconTagHorizontalBoldDuotone,
   IconUserRoundedBoldDuotone,
-} from '@/icons';
+} from '@/components/icons';
+import { ROUTE_PATH } from '@/constants/path';
 import { useUserProfileStore } from '@/store/user-profile';
 import { removeBearerToken } from '@/utils/helper';
 
@@ -30,7 +30,7 @@ const Header = Layout.Header;
 const Footer = Layout.Footer;
 const Content = Layout.Content;
 
-const MainLayout = () => {
+export const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
@@ -148,5 +148,3 @@ const MainLayout = () => {
     </Layout>
   );
 };
-
-export default MainLayout;

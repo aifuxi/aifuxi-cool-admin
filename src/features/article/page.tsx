@@ -1,65 +1,92 @@
 import { useState } from 'react';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import {
   Button,
   Form,
+  Image,
   Input,
   Message,
   Modal,
+  Switch,
   Table,
   TableColumnProps,
   Typography,
 } from '@arco-design/web-react';
-import NiceModal from '@ebay/nice-modal-react';
 import { useRequest } from 'ahooks';
 import useSWR from 'swr';
 
-import { CODE } from '@/constants/code';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
   IconPenNewSquareBoldDuotone,
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
-} from '@/icons';
-import { deleteTagByID, getTags } from '@/services/tag';
-import { GetTagsRequest, Tag } from '@/type/tag';
+} from '@/components/icons';
+import { CODE } from '@/constants/code';
+import { ROUTE_PATH } from '@/constants/path';
+import { deleteArticleByID, getArticles } from '@/services/article';
+import { Article, GetArticlesRequest } from '@/type/article';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
-
-import { CreateTagModal } from './create-tag-modal';
 
 const ButtonGroup = Button.Group;
 const FormItem = Form.Item;
 
-const TagPage = () => {
+export const ArticlePage = () => {
   const [form] = Form.useForm();
-  const [req, setReq] = useState<GetTagsRequest>({
+  const navigate = useNavigate();
+  const [req, setReq] = useState<GetArticlesRequest>({
     page: 1,
     page_size: 10,
     order: 'desc',
     order_by: 'created_at',
   });
   const { data, isLoading, mutate } = useSWR(
-    '/auth/tags' + JSON.stringify(req),
-    () => getTags(req),
+    '/auth/articles' + JSON.stringify(req),
+    () => getArticles(req),
   );
-  const { loading: deleteLoading, runAsync: deleteTag } = useRequest(
-    deleteTagByID,
+  const { loading: deleteLoading, runAsync: deleteArticle } = useRequest(
+    deleteArticleByID,
     {
       manual: true,
     },
   );
 
-  const columns: TableColumnProps<Tag>[] = [
+  const columns: TableColumnProps<Article>[] = [
     {
-      title: '标签名称',
-      render: (_, record) => <Typography.Text>{record.name}</Typography.Text>,
+      title: '文章标题',
+      render: (_, record) => <Typography.Text>{record.title}</Typography.Text>,
+    },
+    {
+      title: '文章描述',
+      render: (_, record) => (
+        <Typography.Text>{record.description}</Typography.Text>
+      ),
+    },
+    {
+      title: '文章封面',
+      render: (_, record) =>
+        record.cover ? (
+          <Image width={80} src={record.cover} alt={record.title} />
+        ) : (
+          <Typography.Text>-</Typography.Text>
+        ),
     },
     {
       title: 'friendly_url',
       render: (_, record) => (
         <Typography.Text>{record.friendly_url}</Typography.Text>
+      ),
+    },
+    {
+      title: '是否置顶',
+      render: (_, record) => <Switch defaultChecked={record.is_top} />,
+    },
+    {
+      title: '置顶优先级',
+      render: (_, record) => (
+        <Typography.Text>{record.top_priority}</Typography.Text>
       ),
     },
     {
@@ -88,7 +115,9 @@ const TagPage = () => {
             type="text"
             icon={<IconPenNewSquareBoldDuotone />}
             onClick={() => {
-              NiceModal.show(CreateTagModal, { record, refresh: mutate });
+              navigate(
+                generatePath(`${ROUTE_PATH.ARTICLE_CREATE}/${record.id}`),
+              );
             }}
           >
             编辑
@@ -100,13 +129,13 @@ const TagPage = () => {
             onClick={() => {
               Modal.confirm({
                 title: '温馨提示',
-                content: `你确定要删除标签【${record.name}】吗？`,
+                content: `你确定要删除文章【${record.title}】吗？`,
                 confirmLoading: deleteLoading,
                 okButtonProps: {
                   status: 'danger',
                 },
                 onOk: async () => {
-                  const res = await deleteTag(record.id);
+                  const res = await deleteArticle(record.id);
                   if (res.code === CODE.Ok) {
                     Message.success('删除成功');
 
@@ -129,7 +158,7 @@ const TagPage = () => {
   return (
     <div>
       <Typography.Title heading={2} bold>
-        标签管理
+        文章列表
       </Typography.Title>
 
       <div className="mb-4">
@@ -138,10 +167,10 @@ const TagPage = () => {
           icon={<IconAddSquareBoldDuotone />}
           size="large"
           onClick={() => {
-            NiceModal.show(CreateTagModal, { refresh: mutate });
+            navigate(ROUTE_PATH.ARTICLE_CREATE);
           }}
         >
-          创建标签
+          创建文章
         </Button>
       </div>
 
@@ -163,17 +192,17 @@ const TagPage = () => {
           });
         }}
       >
-        <FormItem label="标签名称" field="name">
+        <FormItem label="文章标题" field="title">
           <Input
             className="w-[250px]"
-            placeholder="请输入标签名称..."
+            placeholder="请输入文章标题..."
             allowClear
           />
         </FormItem>
-        <FormItem label="标签friendly_url" field="friendly_url">
+        <FormItem label="文章friendly_url" field="friendly_url">
           <Input
             className="w-[250px]"
-            placeholder="请输入标签friendly_url..."
+            placeholder="请输入文章friendly_url..."
             allowClear
           />
         </FormItem>
@@ -233,7 +262,7 @@ const TagPage = () => {
           } else {
             setReq({
               ...req,
-              order_by: field as GetTagsRequest['order_by'],
+              order_by: field as GetArticlesRequest['order_by'],
               order: 'desc',
             });
           }
@@ -242,5 +271,3 @@ const TagPage = () => {
     </div>
   );
 };
-
-export default TagPage;

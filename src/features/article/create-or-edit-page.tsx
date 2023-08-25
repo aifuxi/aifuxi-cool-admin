@@ -26,7 +26,7 @@ import { CreateArticleRequest, UpdateArticleRequest } from '@/type/article';
 
 const FormItem = Form.Item;
 
-const ArticleCreatePage = () => {
+export const ArticleCreateOrEditPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
@@ -139,5 +139,3 @@ const ArticleCreatePage = () => {
     </div>
   );
 };
-
-export default ArticleCreatePage;

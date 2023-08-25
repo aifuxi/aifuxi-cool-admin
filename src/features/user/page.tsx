@@ -15,14 +15,14 @@ import NiceModal from '@ebay/nice-modal-react';
 import { useRequest } from 'ahooks';
 import useSWR from 'swr';
 
-import { CODE } from '@/constants/code';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
   IconPenNewSquareBoldDuotone,
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
-} from '@/icons';
+} from '@/components/icons';
+import { CODE } from '@/constants/code';
 import { deleteUserByID, getUsers } from '@/services/user';
 import { GetUsersRequest, User } from '@/type/user';
 import { getTableOrder } from '@/utils/helper';
@@ -33,7 +33,7 @@ import { CreateUserModal } from './create-user-modal';
 const ButtonGroup = Button.Group;
 const FormItem = Form.Item;
 
-const UserPage = () => {
+export const UserPage = () => {
   const [form] = Form.useForm();
   const [req, setReq] = useState<GetUsersRequest>({
     page: 1,
@@ -252,5 +252,3 @@ const UserPage = () => {
     </div>
   );
 };
-
-export default UserPage;

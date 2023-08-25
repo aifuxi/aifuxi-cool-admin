@@ -3,11 +3,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Form, Input, Message } from '@arco-design/web-react';
 
 import TechLifeManagementPng from '@/assets/images/tech-life-management.png';
+import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/components/icons';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { STORAGE_KEY } from '@/constants/storage';
 import { REDIRECT } from '@/constants/unknow';
-import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/icons';
 import { signIn } from '@/services/auth';
 import { getUserProfile } from '@/services/user';
 import { useUserProfileStore } from '@/store/user-profile';
@@ -15,7 +15,7 @@ import { SignInRequest } from '@/type';
 
 const FormItem = Form.Item;
 
-const Login = () => {
+export const LoginPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [form] = Form.useForm();
@@ -85,5 +85,3 @@ const Login = () => {
     </div>
   );
 };
-
-export default Login;

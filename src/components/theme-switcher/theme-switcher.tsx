@@ -2,8 +2,11 @@ import { useEffect } from 'react';
 
 import { Button } from '@arco-design/web-react';
 
+import {
+  IconMoonFogBoldDuotone,
+  IconSunFogBoldDuotone,
+} from '@/components/icons';
 import { STORAGE_KEY } from '@/constants/storage';
-import { IconMoonFogBoldDuotone, IconSunFogBoldDuotone } from '@/icons';
 import { cn } from '@/utils/helper';
 
 export const ThemeSwitcher = ({ className }: { className?: string }) => {
