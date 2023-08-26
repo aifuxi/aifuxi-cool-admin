@@ -3,11 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   Button,
+  Checkbox,
   Form,
   Input,
   InputNumber,
   Message,
   Switch,
+  Tag,
   Typography,
   Upload,
 } from '@arco-design/web-react';
@@ -22,11 +24,19 @@ import {
   getArticleByID,
   updateArticleByID,
 } from '@/services/article';
+import { getTags } from '@/services/tag';
 import { uploadFile } from '@/services/upload';
 import { CreateArticleRequest, UpdateArticleRequest } from '@/type/article';
+import { GetTagsRequest } from '@/type/tag';
 import { genUploadItems } from '@/utils/helper';
 
 const FormItem = Form.Item;
+const getTagReq: GetTagsRequest = {
+  page: 1,
+  page_size: 100,
+  order: 'desc',
+  order_by: 'created_at',
+};
 
 export const ArticleCreateOrEditPage = () => {
   const [form] = Form.useForm();
@@ -45,6 +55,11 @@ export const ArticleCreateOrEditPage = () => {
       manual: true,
     },
   );
+  const { data: tagData } = useSWR(
+    '/auth/tags' + JSON.stringify(getTagReq),
+    () => getTags(getTagReq),
+  );
+  const tags = tagData?.data;
 
   const loading = createLoading || updateLoading;
   const isEdit = Boolean(id);
@@ -169,6 +184,23 @@ export const ArticleCreateOrEditPage = () => {
           triggerPropName="checked"
         >
           <Switch />
+        </FormItem>
+        <FormItem label="文章标签" field="tag_ids">
+          <Checkbox.Group>
+            {tags?.map((tag) => {
+              return (
+                <Checkbox key={tag.id} value={tag.id}>
+                  {({ checked }) => {
+                    return (
+                      <Tag key={tag.id} color={checked ? 'arcoblue' : ''}>
+                        {tag.name}
+                      </Tag>
+                    );
+                  }}
+                </Checkbox>
+              );
+            })}
+          </Checkbox.Group>
         </FormItem>
         <FormItem label="内容" field="content" rules={[{ required: true }]}>
           <BytemdEditor />
