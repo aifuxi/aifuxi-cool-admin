@@ -4,6 +4,7 @@ import { Message, Upload } from '@arco-design/web-react';
 
 import { CODE } from '@/constants/code';
 import { uploadFile } from '@/services/upload';
+import { genUploadItems } from '@/utils/helper';
 
 type Props = {
   value?: string;
@@ -17,7 +18,9 @@ const UploadField = ({ value, onChange }: Props) => {
 
   useEffect(() => {
     if (value) {
-      setFileList([{ url: value, uid: value }]);
+      console.log('value');
+
+      setFileList(genUploadItems([value]));
     }
   }, [value]);
 

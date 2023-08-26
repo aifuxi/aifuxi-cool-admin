@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
@@ -9,12 +9,12 @@ import {
   Message,
   Switch,
   Typography,
+  Upload,
 } from '@arco-design/web-react';
 import { useRequest } from 'ahooks';
 import useSWR from 'swr';
 
 import { BytemdEditor } from '@/components/bytemd';
-import UploadField from '@/components/upload-field/upload-field';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import {
@@ -22,13 +22,16 @@ import {
   getArticleByID,
   updateArticleByID,
 } from '@/services/article';
+import { uploadFile } from '@/services/upload';
 import { CreateArticleRequest, UpdateArticleRequest } from '@/type/article';
+import { genUploadItems } from '@/utils/helper';
 
 const FormItem = Form.Item;
 
 export const ArticleCreateOrEditPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [cover, setCover] = useState('');
   const { id } = useParams<{ id?: string }>();
   const { loading: createLoading, runAsync: runCreateArticle } = useRequest(
     createArticle,
@@ -54,10 +57,24 @@ export const ArticleCreateOrEditPage = () => {
   const editArticle = data?.data;
 
   useEffect(() => {
-    if (!isLoading && editArticle) {
-      form.setFieldsValue(editArticle);
-    } else {
+    const resetForm = () => {
       form.resetFields();
+      form.setFieldValue('is_published', true);
+      setCover('');
+    };
+
+    const initEditArticleForm = () => {
+      form.setFieldsValue(editArticle);
+      if (editArticle?.cover) {
+        setCover(editArticle.cover);
+        form.setFieldValue('cover', genUploadItems([editArticle.cover]));
+      }
+    };
+
+    if (!isLoading && editArticle) {
+      initEditArticleForm();
+    } else {
+      resetForm();
     }
   }, [isLoading, editArticle, form]);
 
@@ -74,13 +91,19 @@ export const ArticleCreateOrEditPage = () => {
         autoComplete="off"
         onSubmit={async (v) => {
           if (isEdit && id) {
-            const res = await updateArticle(id, v as UpdateArticleRequest);
+            const res = await updateArticle(id, {
+              ...v,
+              cover,
+            } as UpdateArticleRequest);
             if (res.code === CODE.Ok) {
               Message.success('编辑文章成功');
               navigate(ROUTE_PATH.ARTICLE_LIST);
             }
           } else {
-            const res = await runCreateArticle(v as CreateArticleRequest);
+            const res = await runCreateArticle({
+              ...v,
+              cover,
+            } as CreateArticleRequest);
             if (res.code === CODE.Ok) {
               Message.success('创建文章成功');
               navigate(ROUTE_PATH.ARTICLE_LIST);
@@ -105,10 +128,30 @@ export const ArticleCreateOrEditPage = () => {
         >
           <Input.TextArea placeholder="请输入文章描述" />
         </FormItem>
-        <FormItem label="文章封面" field="cover">
-          <UploadField />
+        <FormItem label="文章封面" field="cover" triggerPropName="fileList">
+          <Upload
+            imagePreview
+            listType={'picture-card'}
+            limit={1}
+            accept="image/*"
+            customRequest={async (option) => {
+              const { onSuccess, file } = option;
+
+              const fd = new FormData();
+              fd.append('file', file);
+
+              const res = await uploadFile(fd);
+              if (res.code === CODE.Ok && res.data) {
+                onSuccess({ url: res.data });
+                setCover(res.data);
+                Message.success('上传成功');
+              } else {
+                Message.error('上传失败');
+              }
+            }}
+          />
         </FormItem>
-        <FormItem label="是否置顶" field="is_top">
+        <FormItem label="是否置顶" field="is_top" triggerPropName="checked">
           <Switch />
         </FormItem>
         <FormItem label="置顶优先级" field="top_priority">
@@ -119,6 +162,13 @@ export const ArticleCreateOrEditPage = () => {
             max={10}
             step={1}
           />
+        </FormItem>
+        <FormItem
+          label="是否发布"
+          field="is_published"
+          triggerPropName="checked"
+        >
+          <Switch />
         </FormItem>
         <FormItem label="内容" field="content" rules={[{ required: true }]}>
           <BytemdEditor />

@@ -79,16 +79,7 @@ export const ArticlePage = () => {
         <Typography.Text>{record.friendly_url}</Typography.Text>
       ),
     },
-    {
-      title: '是否置顶',
-      render: (_, record) => <Switch defaultChecked={record.is_top} />,
-    },
-    {
-      title: '置顶优先级',
-      render: (_, record) => (
-        <Typography.Text>{record.top_priority}</Typography.Text>
-      ),
-    },
+
     {
       title: '创建时间',
       dataIndex: 'created_at',
@@ -106,6 +97,20 @@ export const ArticlePage = () => {
       render: (_, record) => (
         <Typography.Text>{formatTime(record.updated_at)}</Typography.Text>
       ),
+    },
+    {
+      title: '是否置顶',
+      render: (_, record) => <Switch defaultChecked={record.is_top} />,
+    },
+    {
+      title: '置顶优先级',
+      render: (_, record) => (
+        <Typography.Text>{record.top_priority}</Typography.Text>
+      ),
+    },
+    {
+      title: '是否发布',
+      render: (_, record) => <Switch defaultChecked={record.is_published} />,
     },
     {
       title: '操作',

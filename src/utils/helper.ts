@@ -1,9 +1,11 @@
-import { TableColumnProps } from '@arco-design/web-react';
+import { TableColumnProps, type Upload } from '@arco-design/web-react';
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 import { STORAGE_KEY } from '@/constants/storage';
 import { OrderRequest } from '@/type';
+
+type UploadItems = React.ComponentProps<typeof Upload>['fileList'];
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,4 +39,8 @@ export function getTableOrder(
   }
 
   return;
+}
+
+export function genUploadItems(urls?: string[]): UploadItems {
+  return urls?.map((url) => ({ url, uid: url }));
 }

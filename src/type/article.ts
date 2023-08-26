@@ -8,6 +8,7 @@ export type Article = {
   content: string;
   friendly_url: string;
   is_top?: boolean;
+  is_published: boolean;
   top_priority?: number;
   created_at: string;
   updated_at: string;
@@ -22,6 +23,7 @@ export type CreateArticleRequest = {
   friendly_url: string;
   is_top?: boolean;
   top_priority?: number;
+  is_published?: boolean;
 };
 
 export type GetArticlesRequest = PaginationRequest &
