@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
-import { REDIRECT } from '@/constants/unknow';
+import { REDIRECT } from '@/constants/unknown';
 
 import { getBearerToken, removeBearerToken } from './helper';
 import { obj2QueryString } from './url';

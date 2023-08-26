@@ -4,12 +4,10 @@ import { Button, Form, Input, Message } from '@arco-design/web-react';
 
 import TechLifeManagementPng from '@/assets/images/tech-life-management.png';
 import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/components/icons';
-import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { STORAGE_KEY } from '@/constants/storage';
-import { REDIRECT } from '@/constants/unknow';
+import { REDIRECT } from '@/constants/unknown';
 import { signIn } from '@/services/auth';
-import { getUserProfile } from '@/services/user';
 import { useUserProfileStore } from '@/store/user-profile';
 import { SignInRequest } from '@/type';
 
@@ -45,17 +43,14 @@ export const LoginPage = () => {
               STORAGE_KEY.ACCESS_TOKEN,
               res.data.access_token,
             );
-            const userRes = await getUserProfile();
 
-            if (userRes.code === CODE.Ok && userRes.data) {
-              setUserProfile(userRes.data);
-              Message.success('登录成功');
-              if (redirectPath) {
-                navigate(redirectPath);
-              } else {
-                // 跳到首页去
-                navigate(ROUTE_PATH.HOME);
-              }
+            setUserProfile(res.data.user);
+            Message.success('登录成功');
+            if (redirectPath) {
+              navigate(redirectPath);
+            } else {
+              // 跳到首页去
+              navigate(ROUTE_PATH.HOME);
             }
           } else {
             Message.clear();

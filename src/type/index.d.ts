@@ -1,9 +1,12 @@
+import { User } from './user';
+
 type SignInRequest = {
   email: string;
   password: string;
 };
 type SignInResponse = {
   access_token: string;
+  user: User;
 };
 
 export type GeneralResponse<T> = {
