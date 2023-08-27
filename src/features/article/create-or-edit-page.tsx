@@ -84,6 +84,11 @@ export const ArticleCreateOrEditPage = () => {
         setCover(editArticle.cover);
         form.setFieldValue('cover', genUploadItems([editArticle.cover]));
       }
+
+      const tagIDs = editArticle?.tags?.map((tag) => tag.id);
+      if (tagIDs) {
+        form.setFieldValue('tag_ids', tagIDs);
+      }
     };
 
     if (!isLoading && editArticle) {

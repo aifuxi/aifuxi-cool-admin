@@ -4,6 +4,7 @@ export type Tag = {
   id: string;
   name: string;
   friendly_url: string;
+  article_count: number;
   created_at: string;
   updated_at: string;
   deleted_at?: string;

@@ -122,7 +122,9 @@ export const UserPage = () => {
 
                     const currentPageRes = await mutate();
                     if (!currentPageRes?.data?.length) {
-                      setReq({ ...req, page: req.page - 1 });
+                      if (req.page > 1) {
+                        setReq({ ...req, page: req.page - 1 });
+                      }
                     }
                   }
                 },

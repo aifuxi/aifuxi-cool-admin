@@ -63,6 +63,12 @@ export const TagPage = () => {
       ),
     },
     {
+      title: '文章数',
+      render: (_, record) => (
+        <Typography.Text>{record.article_count}</Typography.Text>
+      ),
+    },
+    {
       title: '创建时间',
       dataIndex: 'created_at',
       sorter: true,
@@ -112,7 +118,9 @@ export const TagPage = () => {
 
                     const currentPageRes = await mutate();
                     if (!currentPageRes?.data?.length) {
-                      setReq({ ...req, page: req.page - 1 });
+                      if (req.page > 1) {
+                        setReq({ ...req, page: req.page - 1 });
+                      }
                     }
                   }
                 },

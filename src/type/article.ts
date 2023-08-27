@@ -1,5 +1,7 @@
 import { OrderRequest, PaginationRequest } from '.';
 
+import { Tag } from './tag';
+
 export type Article = {
   id: string;
   title: string;
@@ -10,6 +12,7 @@ export type Article = {
   is_top?: boolean;
   is_published: boolean;
   top_priority?: number;
+  tags?: Tag[];
   created_at: string;
   updated_at: string;
   deleted_at?: string;
@@ -24,6 +27,7 @@ export type CreateArticleRequest = {
   is_top?: boolean;
   top_priority?: number;
   is_published?: boolean;
+  tag_ids?: string[];
 };
 
 export type GetArticlesRequest = PaginationRequest &

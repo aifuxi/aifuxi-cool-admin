@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import {
+  Tag as ArcoTag,
   Button,
   Form,
   Image,
@@ -80,7 +81,21 @@ export const ArticlePage = () => {
         <Typography.Text>{record.friendly_url}</Typography.Text>
       ),
     },
-
+    {
+      title: '标签',
+      width: 200,
+      render: (_, record) => (
+        <div className="flex flex-wrap gap-x-2 gap-y-1 items-center">
+          {record.tags?.map((item) => (
+            <div>
+              <ArcoTag key={item.id} color="arcoblue" bordered>
+                {item.name}
+              </ArcoTag>
+            </div>
+          ))}
+        </div>
+      ),
+    },
     {
       title: '创建时间',
       dataIndex: 'created_at',
@@ -100,7 +115,7 @@ export const ArticlePage = () => {
       ),
     },
     {
-      title: '是否置顶',
+      title: '置顶',
       render: (_, record) => <Switch defaultChecked={record.is_top} />,
     },
     {
@@ -110,7 +125,7 @@ export const ArticlePage = () => {
       ),
     },
     {
-      title: '是否发布',
+      title: '发布',
       render: (_, record) => <Switch defaultChecked={record.is_published} />,
     },
     {
@@ -147,7 +162,9 @@ export const ArticlePage = () => {
 
                     const currentPageRes = await mutate();
                     if (!currentPageRes?.data?.length) {
-                      setReq({ ...req, page: req.page - 1 });
+                      if (req.page > 1) {
+                        setReq({ ...req, page: req.page - 1 });
+                      }
                     }
                   }
                 },
