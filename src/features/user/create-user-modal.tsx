@@ -54,14 +54,14 @@ export const CreateUserModal = NiceModal.create(
           onSubmit={async (v) => {
             if (isEdit && record?.id) {
               const res = await updateUser(record.id, v as UpdateUserRequest);
-              if (res.code === CODE.Ok) {
+              if (res.code === CODE.ResponseCodeOk) {
                 Message.success('编辑用户成功');
                 refresh();
                 modal.hide();
               }
             } else {
               const res = await runCreateUser(v as CreateUserRequest);
-              if (res.code === CODE.Ok) {
+              if (res.code === CODE.ResponseCodeOk) {
                 Message.success('创建用户成功');
                 refresh();
                 modal.hide();

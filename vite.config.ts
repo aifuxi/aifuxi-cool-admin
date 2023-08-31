@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/admin/api': 'http://localhost:9003',
+      '/admin-api': 'http://localhost:9003',
     },
   },
   resolve: {

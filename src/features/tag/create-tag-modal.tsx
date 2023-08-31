@@ -52,14 +52,14 @@ export const CreateTagModal = NiceModal.create(({ refresh, record }: Props) => {
         onSubmit={async (v) => {
           if (isEdit && record?.id) {
             const res = await updateTag(record.id, v as UpdateTagRequest);
-            if (res.code === CODE.Ok) {
+            if (res.code === CODE.ResponseCodeOk) {
               Message.success('编辑标签成功');
               refresh();
               modal.hide();
             }
           } else {
             const res = await runCreateTag(v as CreateTagRequest);
-            if (res.code === CODE.Ok) {
+            if (res.code === CODE.ResponseCodeOk) {
               Message.success('创建标签成功');
               refresh();
               modal.hide();

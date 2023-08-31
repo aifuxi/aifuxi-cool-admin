@@ -115,7 +115,7 @@ export const ArticleCreateOrEditPage = () => {
               ...v,
               cover,
             } as UpdateArticleRequest);
-            if (res.code === CODE.Ok) {
+            if (res.code === CODE.ResponseCodeOk) {
               Message.success('编辑文章成功');
               navigate(ROUTE_PATH.ARTICLE_LIST);
             }
@@ -124,7 +124,7 @@ export const ArticleCreateOrEditPage = () => {
               ...v,
               cover,
             } as CreateArticleRequest);
-            if (res.code === CODE.Ok) {
+            if (res.code === CODE.ResponseCodeOk) {
               Message.success('创建文章成功');
               navigate(ROUTE_PATH.ARTICLE_LIST);
             }
@@ -161,7 +161,7 @@ export const ArticleCreateOrEditPage = () => {
               fd.append('file', file);
 
               const res = await uploadFile(fd);
-              if (res.code === CODE.Ok && res.data) {
+              if (res.code === CODE.ResponseCodeOk && res.data) {
                 onSuccess({ url: res.data });
                 setCover(res.data);
                 Message.success('上传成功');

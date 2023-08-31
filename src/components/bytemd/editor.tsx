@@ -19,7 +19,10 @@ const BytemdEditor: React.FC<Props> = ({ value, onChange, editorProps }) => {
     fd.append('file', files[0]);
     const res = await uploadFile(fd);
 
-    if (res.code !== CODE.Ok || !res.data) {
+    console.log(res);
+    
+
+    if (res.code !== CODE.ResponseCodeOk || !res.data) {
       Message.error('上传图片失败');
       return [];
     }

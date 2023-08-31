@@ -2,6 +2,7 @@ import { IconAddSquareBoldDuotone } from './icon-add';
 import { IconHomeSmileBoldDuotone } from './icon-home';
 import { IconLetterBoldDuotone } from './icon-letter';
 import { IconLockBoldDuotone } from './icon-lock';
+import { IconLogout2BoldDuotone } from './icon-logout';
 import { IconMinimalisticMagniferBoldDuotone } from './icon-magnifer';
 import { IconMoonFogBoldDuotone } from './icon-moon';
 import { IconNotebookBoldDuotone } from './icon-notebook';
@@ -26,4 +27,5 @@ export {
   IconMinimalisticMagniferBoldDuotone,
   IconUserRoundedBoldDuotone,
   IconNotebookBoldDuotone,
+  IconLogout2BoldDuotone
 };

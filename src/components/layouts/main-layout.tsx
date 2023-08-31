@@ -4,15 +4,16 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Avatar,
   Button,
+  Dropdown,
   Layout,
   Menu,
   Modal,
-  Trigger,
   Typography,
 } from '@arco-design/web-react';
 
 import {
   IconHomeSmileBoldDuotone,
+  IconLogout2BoldDuotone,
   IconNotebookBoldDuotone,
   IconTagHorizontalBoldDuotone,
   IconUserRoundedBoldDuotone,
@@ -43,6 +44,36 @@ export const MainLayout = () => {
     setSelectedKeys([location.pathname]);
   }, [location]);
 
+  const dropList = (
+    <Menu>
+      <Menu.Item key="3">
+        <div className="w-full h-full flex items-center space-x-2">
+          <Button
+            status="danger"
+            type='text'
+            icon={<IconLogout2BoldDuotone />}
+            onClick={() => {
+              Modal.confirm({
+                title: '温馨提示',
+                content: `你确定要退出登录吗？`,
+                okButtonProps: {
+                  status: 'danger',
+                },
+                onOk: async () => {
+                  clearUserProfile();
+                  removeBearerToken();
+                  navigate(ROUTE_PATH.LOGIN, { replace: true });
+                },
+              });
+            }}
+          >
+            退出登录
+          </Button>
+        </div>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <Layout className="h-screen w-screen bg-arco-bg-1">
       <Sider collapsed={false} collapsible trigger={null} breakpoint="xl">
@@ -51,6 +82,7 @@ export const MainLayout = () => {
         </Typography.Title>
         <Menu
           selectedKeys={selectedKeys}
+          autoOpen
           onClickMenuItem={(key) => {
             setSelectedKeys([key]);
             navigate(key);
@@ -100,35 +132,7 @@ export const MainLayout = () => {
       <Layout>
         <Header className="h-[60px] flex items-center justify-end px-6 shadow-md sticky top-0 bg-arco-bg-1 z-[1]">
           <ThemeSwitcher />
-          <Trigger
-            popup={() => (
-              <Button
-                status="danger"
-                onClick={() => {
-                  Modal.confirm({
-                    title: '温馨提示',
-                    content: `你确定要退出登录吗？`,
-                    okButtonProps: {
-                      status: 'danger',
-                    },
-                    onOk: async () => {
-                      clearUserProfile();
-                      removeBearerToken();
-                      navigate(ROUTE_PATH.LOGIN, { replace: true });
-                    },
-                  });
-                }}
-              >
-                退出登录
-              </Button>
-            )}
-            mouseEnterDelay={400}
-            mouseLeaveDelay={400}
-            position="bottom"
-            popupAlign={{
-              bottom: 20,
-            }}
-          >
+          <Dropdown droplist={dropList} trigger="click" position="bl">
             <Avatar className="bg-[rgb(var(--primary-6))]">
               {userProfile?.avatar ? (
                 <img alt={userProfile?.nickname} src={userProfile?.avatar} />
@@ -136,7 +140,7 @@ export const MainLayout = () => {
                 userProfile?.nickname || '未知用户'
               )}
             </Avatar>
-          </Trigger>
+          </Dropdown>
         </Header>
         <Layout className="px-6">
           <Content>

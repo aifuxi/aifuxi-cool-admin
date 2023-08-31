@@ -39,7 +39,7 @@ const UploadField = ({ value, onChange }: Props) => {
         fd.append('file', file);
 
         const res = await uploadFile(fd);
-        if (res.code === CODE.Ok && res.data) {
+        if (res.code === CODE.ResponseCodeOk && res.data) {
           onSuccess({ url: res.data, uid: res.data });
           Message.success('上传成功');
           onChange?.(res.data);

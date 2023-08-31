@@ -41,7 +41,7 @@ export const UserPage = () => {
     order: 'desc',
     order_by: 'created_at',
   });
-  const { data, isLoading, mutate } = useSWR(
+  const { data, isValidating, mutate } = useSWR(
     '/auth/users' + JSON.stringify(req),
     () => getUsers(req),
   );
@@ -117,7 +117,7 @@ export const UserPage = () => {
                 },
                 onOk: async () => {
                   const res = await deleteUser(record.id);
-                  if (res.code === CODE.Ok) {
+                  if (res.code === CODE.ResponseCodeOk) {
                     Message.success('删除成功');
 
                     const currentPageRes = await mutate();
@@ -208,7 +208,7 @@ export const UserPage = () => {
       </Form>
 
       <Table
-        loading={isLoading}
+        loading={isValidating}
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}

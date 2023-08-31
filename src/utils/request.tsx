@@ -9,7 +9,7 @@ import { getBearerToken, removeBearerToken } from './helper';
 import { obj2QueryString } from './url';
 
 export const x = axios.create({
-  baseURL: '/admin/api',
+  baseURL: '/admin-api',
 });
 
 x.interceptors.request.use(
@@ -30,24 +30,29 @@ x.interceptors.request.use(
 // Add a response interceptor
 x.interceptors.response.use(
   function (response) {
+    if (response.data.code === CODE.ResponseCodeOk) {
+      return response.data;
+    }
+
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    if (response.data.code !== CODE.Ok) {
-      const needRedirectCode = [CODE.NoAuthorized, CODE.TokenExpired];
-      Message.error(response.data.msg);
+    const needRedirectCode = [
+      CODE.ResponseCodeInvalidToken,
+      CODE.ResponseCodeNoAuthorized,
+      CODE.ResponseCodeTokenExpired,
+    ];
+    Message.error(response.data.msg);
 
-      if (needRedirectCode.includes(response.data.code)) {
-        removeBearerToken();
+    if (needRedirectCode.includes(response.data.code)) {
+      removeBearerToken();
 
-        window.setTimeout(() => {
-          const query = obj2QueryString({ [REDIRECT]: location.pathname });
-          location.href = `${ROUTE_PATH.LOGIN}${query}`;
-        }, 1 * 1000);
-      }
-
-      return Promise.reject(new Error(response.data.msg));
+      window.setTimeout(() => {
+        const query = obj2QueryString({ [REDIRECT]: location.pathname });
+        location.href = `${ROUTE_PATH.LOGIN}${query}`;
+      }, 1 * 1000);
     }
-    return response.data;
+
+    return Promise.reject(new Error(response.data.msg));
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger

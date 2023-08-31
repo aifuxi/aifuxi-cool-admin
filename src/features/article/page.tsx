@@ -43,7 +43,7 @@ export const ArticlePage = () => {
     order: 'desc',
     order_by: 'created_at',
   });
-  const { data, isLoading, mutate } = useSWR(
+  const { data, isValidating, mutate } = useSWR(
     '/auth/articles' + JSON.stringify(req),
     () => getArticles(req),
   );
@@ -157,7 +157,7 @@ export const ArticlePage = () => {
                 },
                 onOk: async () => {
                   const res = await deleteArticle(record.id);
-                  if (res.code === CODE.Ok) {
+                  if (res.code === CODE.ResponseCodeOk) {
                     Message.success('删除成功');
 
                     const currentPageRes = await mutate();
@@ -248,7 +248,7 @@ export const ArticlePage = () => {
       </Form>
 
       <Table
-        loading={isLoading}
+        loading={isValidating}
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}

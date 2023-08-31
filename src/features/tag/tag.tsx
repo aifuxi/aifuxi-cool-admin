@@ -40,7 +40,7 @@ export const TagPage = () => {
     order: 'desc',
     order_by: 'created_at',
   });
-  const { data, isLoading, mutate } = useSWR(
+  const { data, isValidating, mutate } = useSWR(
     '/auth/tags' + JSON.stringify(req),
     () => getTags(req),
   );
@@ -113,7 +113,7 @@ export const TagPage = () => {
                 },
                 onOk: async () => {
                   const res = await deleteTag(record.id);
-                  if (res.code === CODE.Ok) {
+                  if (res.code === CODE.ResponseCodeOk) {
                     Message.success('删除成功');
 
                     const currentPageRes = await mutate();
@@ -204,7 +204,7 @@ export const TagPage = () => {
       </Form>
 
       <Table
-        loading={isLoading}
+        loading={isValidating}
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}
