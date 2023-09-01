@@ -12,8 +12,6 @@ import {
   Typography,
 } from '@arco-design/web-react';
 import NiceModal from '@ebay/nice-modal-react';
-import { useRequest } from 'ahooks';
-import useSWR from 'swr';
 
 import {
   IconAddSquareBoldDuotone,
@@ -23,12 +21,12 @@ import {
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
 import { CODE } from '@/constants/code';
-import { deleteUserByID, getUsers } from '@/services/user';
 import { GetUsersRequest, User } from '@/type/user';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
 
 import { CreateUserModal } from './create-user-modal';
+import { useDeleteUserByID, useUsers } from './hooks';
 
 const ButtonGroup = Button.Group;
 const FormItem = Form.Item;
@@ -41,16 +39,8 @@ export const UserPage = () => {
     order: 'desc',
     order_by: 'created_at',
   });
-  const { data, isValidating, mutate } = useSWR(
-    '/auth/users' + JSON.stringify(req),
-    () => getUsers(req),
-  );
-  const { loading: deleteLoading, runAsync: deleteUser } = useRequest(
-    deleteUserByID,
-    {
-      manual: true,
-    },
-  );
+  const { users, total, isFetching, refetch } = useUsers(req);
+  const { deleteLoading, deleteUser } = useDeleteUserByID();
 
   const columns: TableColumnProps<User>[] = [
     {
@@ -98,7 +88,7 @@ export const UserPage = () => {
             type="text"
             icon={<IconPenNewSquareBoldDuotone />}
             onClick={() => {
-              NiceModal.show(CreateUserModal, { record, refresh: mutate });
+              NiceModal.show(CreateUserModal, { record, refetch });
             }}
           >
             编辑
@@ -120,7 +110,7 @@ export const UserPage = () => {
                   if (res.code === CODE.ResponseCodeOk) {
                     Message.success('删除成功');
 
-                    const currentPageRes = await mutate();
+                    const currentPageRes = await refetch();
                     if (!currentPageRes?.data?.length) {
                       if (req.page > 1) {
                         setReq({ ...req, page: req.page - 1 });
@@ -150,7 +140,7 @@ export const UserPage = () => {
           icon={<IconAddSquareBoldDuotone />}
           size="large"
           onClick={() => {
-            NiceModal.show(CreateUserModal, { refresh: mutate });
+            NiceModal.show(CreateUserModal, { refetch });
           }}
         >
           创建用户
@@ -208,12 +198,12 @@ export const UserPage = () => {
       </Form>
 
       <Table
-        loading={isValidating}
+        loading={isFetching}
         rowKey={(record) => record.id}
         columns={columns}
-        data={data?.data || []}
+        data={users}
         pagination={{
-          total: data?.total,
+          total,
           showTotal: true,
           current: req.page,
           pageSize: req.page_size,

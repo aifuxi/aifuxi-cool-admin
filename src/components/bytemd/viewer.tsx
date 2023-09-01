@@ -26,7 +26,6 @@ const BytemdViewer: React.FC<Props> = ({ content }) => {
           /* Resolved - 文本被成功复制到剪贴板 */
         } catch (err) {
           /* Rejected - 文本未被复制到剪贴板 */
-          console.log(err);
         }
       }
 

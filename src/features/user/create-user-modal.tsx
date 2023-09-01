@@ -9,12 +9,12 @@ import { CreateUserRequest, UpdateUserRequest, User } from '@/type/user';
 
 const FormItem = Form.Item;
 type Props = {
-  refresh: () => void;
+  refetch: () => void;
   record?: User;
 };
 
 export const CreateUserModal = NiceModal.create(
-  ({ refresh, record }: Props) => {
+  ({ refetch, record }: Props) => {
     const modal = useModal();
     const [form] = Form.useForm();
     const { loading: createLoading, runAsync: runCreateUser } = useRequest(
@@ -56,14 +56,14 @@ export const CreateUserModal = NiceModal.create(
               const res = await updateUser(record.id, v as UpdateUserRequest);
               if (res.code === CODE.ResponseCodeOk) {
                 Message.success('编辑用户成功');
-                refresh();
+                refetch();
                 modal.hide();
               }
             } else {
               const res = await runCreateUser(v as CreateUserRequest);
               if (res.code === CODE.ResponseCodeOk) {
                 Message.success('创建用户成功');
-                refresh();
+                refetch();
                 modal.hide();
               }
             }

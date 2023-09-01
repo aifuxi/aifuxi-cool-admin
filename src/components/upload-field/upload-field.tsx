@@ -18,8 +18,6 @@ const UploadField = ({ value, onChange }: Props) => {
 
   useEffect(() => {
     if (value) {
-      console.log('value');
-
       setFileList(genUploadItems([value]));
     }
   }, [value]);

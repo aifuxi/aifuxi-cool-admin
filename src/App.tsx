@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
+import { ConfigProvider } from '@arco-design/web-react';
 import NiceModal from '@ebay/nice-modal-react';
 
 import { ROUTE_PATH } from '@/constants/path';
@@ -62,7 +63,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NiceModal.Provider>
-        <RouterProvider router={router} />
+        <ConfigProvider size={'large'}>
+          <RouterProvider router={router} />
+        </ConfigProvider>
       </NiceModal.Provider>
 
       {/* The rest of your application */}

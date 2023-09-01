@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { TableColumnProps, type Upload } from '@arco-design/web-react';
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
