@@ -1,3 +1,5 @@
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import NiceModal from '@ebay/nice-modal-react';
@@ -48,11 +50,24 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
+
 function App() {
   return (
-    <NiceModal.Provider>
-      <RouterProvider router={router} />
-    </NiceModal.Provider>
+    <QueryClientProvider client={queryClient}>
+      <NiceModal.Provider>
+        <RouterProvider router={router} />
+      </NiceModal.Provider>
+
+      {/* The rest of your application */}
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 
