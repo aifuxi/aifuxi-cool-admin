@@ -1,38 +1,51 @@
-import { useRequest } from 'ahooks';
-import useSWR from 'swr';
+import { useMutation, useQuery } from 'react-query';
 
-import { deleteUserByID, getUsers } from '@/services/user';
-import { GetUsersRequest } from '@/type/user';
+import {
+  createUser,
+  deleteUserByID,
+  getUsers,
+  updateUserByID,
+} from '@/services/user';
+import {
+  CreateUserRequest,
+  GetUsersRequest,
+  UpdateUserRequest,
+} from '@/type/user';
 
-export function useUsers(req: GetUsersRequest) {
-  const { data, isValidating, mutate } = useSWR(
-    '/auth/users' + JSON.stringify(req),
-    () => getUsers(req),
-  );
+export const useUsers = (req: GetUsersRequest) => {
+  return useQuery({
+    queryKey: ['users', req],
+    queryFn: () => getUsers(req),
+  });
+};
 
-  const users = data?.data;
-  const isFetching = isValidating;
-  const refetch = mutate;
-  const total = data?.total;
-
-  return {
-    users,
-    isFetching,
-    refetch,
-    total,
-  };
-}
-
-export function useDeleteUserByID() {
-  const { loading: deleteLoading, runAsync: deleteUser } = useRequest(
-    deleteUserByID,
-    {
-      manual: true,
+export const useDeleteUser = (onSuccess: () => void) => {
+  return useMutation({
+    mutationKey: 'delete user',
+    mutationFn: (id: string) => deleteUserByID(id),
+    onSuccess: () => {
+      onSuccess();
     },
-  );
+  });
+};
 
-  return {
-    deleteLoading,
-    deleteUser,
-  };
-}
+export const useCreateUser = (onSuccess: () => void) => {
+  return useMutation({
+    mutationKey: 'create user',
+    mutationFn: (arg: CreateUserRequest) => createUser(arg),
+    onSuccess: () => {
+      onSuccess();
+    },
+  });
+};
+
+export const useUpdateUser = (onSuccess: () => void) => {
+  return useMutation({
+    mutationKey: 'update user',
+    mutationFn: (arg: UpdateUserRequest & { id: string }) =>
+      updateUserByID(arg.id, arg),
+    onSuccess: () => {
+      onSuccess();
+    },
+  });
+};

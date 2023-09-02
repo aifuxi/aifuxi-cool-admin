@@ -63,7 +63,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <NiceModal.Provider>
-        <ConfigProvider size={'large'}>
+        <ConfigProvider
+          size={'large'}
+          componentConfig={{ Table: { border: false } }}
+        >
           <RouterProvider router={router} />
         </ConfigProvider>
       </NiceModal.Provider>

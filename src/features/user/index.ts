@@ -1,4 +1,4 @@
-import { useDeleteUserByID, useUsers } from './hooks';
+import { useUsers } from './hooks';
 import { UserPage } from './page';
 
-export { UserPage, useUsers, useDeleteUserByID };
+export { UserPage, useUsers };

@@ -1,37 +1,39 @@
 import { Button, Form, Input, Message, Modal } from '@arco-design/web-react';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import { useRequest } from 'ahooks';
 
-import { CODE } from '@/constants/code';
-import { createTag, updateTagByID } from '@/services/tag';
-import { CreateTagRequest, Tag, UpdateTagRequest } from '@/type/tag';
+import { useCreateTag, useUpdateTag } from '@/features/tag/hooks.ts';
+import { Tag } from '@/type/tag';
 
 const FormItem = Form.Item;
 type Props = {
-  refresh: () => void;
+  refetch: () => void;
   record?: Tag;
 };
 
-export const CreateTagModal = NiceModal.create(({ refresh, record }: Props) => {
+export const CreateTagModal = NiceModal.create(({ refetch, record }: Props) => {
   const modal = useModal();
   const [form] = Form.useForm();
-  const { loading: createLoading, runAsync: runCreateTag } = useRequest(
-    createTag,
-    {
-      manual: true,
-    },
-  );
-  const { loading: updateLoading, runAsync: updateTag } = useRequest(
-    updateTagByID,
-    {
-      manual: true,
-    },
-  );
 
-  const loading = createLoading || updateLoading;
   const isEdit = Boolean(record?.id);
   const title = record?.id ? '编辑标签' : '创建标签';
   const btnText = record?.id ? '修改' : '创建';
+
+  const handleSuccess = () => {
+    let msg = '创建标签成功';
+    if (isEdit && record?.id) {
+      msg = '编辑标签成功';
+    }
+    Message.success(msg);
+    refetch();
+    modal.hide();
+  };
+
+  const { mutateAsync: runCreateTag, isLoading: createLoading } =
+    useCreateTag(handleSuccess);
+  const { mutateAsync: updateTag, isLoading: updateLoading } =
+    useUpdateTag(handleSuccess);
+
+  const loading = createLoading || updateLoading;
 
   return (
     <Modal
@@ -51,19 +53,12 @@ export const CreateTagModal = NiceModal.create(({ refresh, record }: Props) => {
         autoComplete="off"
         onSubmit={async (v) => {
           if (isEdit && record?.id) {
-            const res = await updateTag(record.id, v as UpdateTagRequest);
-            if (res.code === CODE.ResponseCodeOk) {
-              Message.success('编辑标签成功');
-              refresh();
-              modal.hide();
-            }
+            await updateTag({
+              ...v,
+              id: record.id,
+            });
           } else {
-            const res = await runCreateTag(v as CreateTagRequest);
-            if (res.code === CODE.ResponseCodeOk) {
-              Message.success('创建标签成功');
-              refresh();
-              modal.hide();
-            }
+            await runCreateTag(v);
           }
         }}
       >

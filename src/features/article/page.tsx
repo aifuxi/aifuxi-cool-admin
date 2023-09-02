@@ -14,8 +14,6 @@ import {
   TableColumnProps,
   Typography,
 } from '@arco-design/web-react';
-import { useRequest } from 'ahooks';
-import useSWR from 'swr';
 
 import {
   IconAddSquareBoldDuotone,
@@ -24,9 +22,9 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
-import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
-import { deleteArticleByID, getArticles } from '@/services/article';
+import { defaultGetArticlesReq } from '@/features/article/config';
+import { useArticles, useDeleteArticle } from '@/features/article/hooks';
 import { Article, GetArticlesRequest } from '@/type/article';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
@@ -37,22 +35,21 @@ const FormItem = Form.Item;
 export const ArticlePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [req, setReq] = useState<GetArticlesRequest>({
-    page: 1,
-    page_size: 10,
-    order: 'desc',
-    order_by: 'created_at',
-  });
-  const { data, isValidating, mutate } = useSWR(
-    '/auth/articles' + JSON.stringify(req),
-    () => getArticles(req),
-  );
+  const [req, setReq] = useState<GetArticlesRequest>(defaultGetArticlesReq);
+  const { data, refetch, isError, isLoading } = useArticles(req);
+  const handleDeleteArticleSuccess = async () => {
+    Message.success('删除成功');
 
-  const { loading: deleteLoading, runAsync: deleteArticle } = useRequest(
-    deleteArticleByID,
-    {
-      manual: true,
-    },
+    await refetch();
+
+    if (data?.data) {
+      if (req.page > 1) {
+        setReq({ ...req, page: req.page - 1 });
+      }
+    }
+  };
+  const { mutate: deleteArticle, isLoading: deleteLoading } = useDeleteArticle(
+    handleDeleteArticleSuccess,
   );
 
   const columns: TableColumnProps<Article>[] = [
@@ -155,18 +152,8 @@ export const ArticlePage = () => {
                 okButtonProps: {
                   status: 'danger',
                 },
-                onOk: async () => {
-                  const res = await deleteArticle(record.id);
-                  if (res.code === CODE.ResponseCodeOk) {
-                    Message.success('删除成功');
-
-                    const currentPageRes = await mutate();
-                    if (!currentPageRes?.data?.length) {
-                      if (req.page > 1) {
-                        setReq({ ...req, page: req.page - 1 });
-                      }
-                    }
-                  }
+                onOk: () => {
+                  deleteArticle(record.id);
                 },
               });
             }}
@@ -177,6 +164,11 @@ export const ArticlePage = () => {
       ),
     },
   ];
+
+  if (isError) {
+    // TODO: 兜底出错情况
+    return <div>出错了</div>;
+  }
 
   return (
     <div>
@@ -207,12 +199,7 @@ export const ArticlePage = () => {
         }}
         onReset={() => {
           form.resetFields();
-          setReq({
-            page: 1,
-            page_size: 10,
-            order: 'desc',
-            order_by: 'created_at',
-          });
+          setReq(defaultGetArticlesReq);
         }}
       >
         <FormItem label="文章标题" field="title">
@@ -248,7 +235,7 @@ export const ArticlePage = () => {
       </Form>
 
       <Table
-        loading={isValidating}
+        loading={isLoading}
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}

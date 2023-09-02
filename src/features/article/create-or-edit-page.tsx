@@ -13,63 +13,49 @@ import {
   Typography,
   Upload,
 } from '@arco-design/web-react';
-import { useRequest } from 'ahooks';
-import useSWR from 'swr';
 
 import { BytemdEditor } from '@/components/bytemd';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
-import {
-  createArticle,
-  getArticleByID,
-  updateArticleByID,
-} from '@/services/article';
-import { getTags } from '@/services/tag';
+import { getAllTagsReq } from '@/features/article/config.ts';
+import { useTags } from '@/features/tag/hooks.ts';
 import { uploadFile } from '@/services/upload';
-import { CreateArticleRequest, UpdateArticleRequest } from '@/type/article';
-import { GetTagsRequest } from '@/type/tag';
 import { genUploadItems } from '@/utils/helper';
 
+import { useArticle, useCreateArticle, useUpdateArticle } from './hooks';
+
 const FormItem = Form.Item;
-const getTagReq: GetTagsRequest = {
-  page: 1,
-  page_size: 100,
-  order: 'desc',
-  order_by: 'created_at',
-};
 
 export const ArticleCreateOrEditPage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [cover, setCover] = useState('');
   const { id } = useParams<{ id?: string }>();
-  const { loading: createLoading, runAsync: runCreateArticle } = useRequest(
-    createArticle,
-    {
-      manual: true,
-    },
-  );
-  const { loading: updateLoading, runAsync: updateArticle } = useRequest(
-    updateArticleByID,
-    {
-      manual: true,
-    },
-  );
-  const { data: tagData } = useSWR(
-    '/auth/tags' + JSON.stringify(getTagReq),
-    () => getTags(getTagReq),
-  );
+  const { data: tagData } = useTags(getAllTagsReq);
   const tags = tagData?.data;
+
+  const handleSuccess = () => {
+    let msg = '创建文章成功';
+    if (isEdit && id) {
+      msg = '编辑文章成功';
+    }
+
+    navigate(ROUTE_PATH.ARTICLE_LIST);
+    Message.success(msg);
+  };
+
+  const { mutateAsync: runCreateArticle, isLoading: createLoading } =
+    useCreateArticle(handleSuccess);
+  const { mutateAsync: updateArticle, isLoading: updateLoading } =
+    useUpdateArticle(handleSuccess);
 
   const loading = createLoading || updateLoading;
   const isEdit = Boolean(id);
   const title = id ? '编辑文章' : '创建文章';
   const btnText = id ? '修改' : '创建';
 
-  const { data, isLoading } = useSWR(id ? '/auth/articles' + id : false, () =>
-    getArticleByID(id!),
-  );
-  const editArticle = data?.data;
+  const { data: editArticleData, isLoading } = useArticle(id || '');
+  const editArticle = editArticleData?.data;
 
   useEffect(() => {
     const resetForm = () => {
@@ -109,25 +95,18 @@ export const ArticleCreateOrEditPage = () => {
         layout="vertical"
         size="large"
         autoComplete="off"
-        onSubmit={async (v) => {
+        onSubmit={(v) => {
           if (isEdit && id) {
-            const res = await updateArticle(id, {
+            updateArticle({
               ...v,
               cover,
-            } as UpdateArticleRequest);
-            if (res.code === CODE.ResponseCodeOk) {
-              Message.success('编辑文章成功');
-              navigate(ROUTE_PATH.ARTICLE_LIST);
-            }
+              id,
+            });
           } else {
-            const res = await runCreateArticle({
+            runCreateArticle({
               ...v,
               cover,
-            } as CreateArticleRequest);
-            if (res.code === CODE.ResponseCodeOk) {
-              Message.success('创建文章成功');
-              navigate(ROUTE_PATH.ARTICLE_LIST);
-            }
+            });
           }
         }}
       >

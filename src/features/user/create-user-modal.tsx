@@ -1,11 +1,10 @@
 import { Button, Form, Input, Message, Modal } from '@arco-design/web-react';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import { useRequest } from 'ahooks';
 
 import UploadField from '@/components/upload-field/upload-field';
-import { CODE } from '@/constants/code';
-import { createUser, updateUserByID } from '@/services/user';
-import { CreateUserRequest, UpdateUserRequest, User } from '@/type/user';
+import { User } from '@/type/user';
+
+import { useCreateUser, useUpdateUser } from './hooks';
 
 const FormItem = Form.Item;
 type Props = {
@@ -17,23 +16,26 @@ export const CreateUserModal = NiceModal.create(
   ({ refetch, record }: Props) => {
     const modal = useModal();
     const [form] = Form.useForm();
-    const { loading: createLoading, runAsync: runCreateUser } = useRequest(
-      createUser,
-      {
-        manual: true,
-      },
-    );
-    const { loading: updateLoading, runAsync: updateUser } = useRequest(
-      updateUserByID,
-      {
-        manual: true,
-      },
-    );
-
-    const loading = createLoading || updateLoading;
     const isEdit = Boolean(record?.id);
     const title = record?.id ? '编辑用户' : '创建用户';
     const btnText = record?.id ? '修改' : '创建';
+
+    const handleSuccess = () => {
+      let msg = '创建用户成功';
+      if (isEdit && record?.id) {
+        msg = '编辑用户成功';
+      }
+      Message.success(msg);
+      refetch();
+      modal.hide();
+    };
+
+    const { mutateAsync: runCreateUser, isLoading: createLoading } =
+      useCreateUser(handleSuccess);
+    const { mutateAsync: updateUser, isLoading: updateLoading } =
+      useUpdateUser(handleSuccess);
+
+    const loading = createLoading || updateLoading;
 
     return (
       <Modal
@@ -51,21 +53,14 @@ export const CreateUserModal = NiceModal.create(
           initialValues={record}
           size="large"
           autoComplete="off"
-          onSubmit={async (v) => {
+          onSubmit={(v) => {
             if (isEdit && record?.id) {
-              const res = await updateUser(record.id, v as UpdateUserRequest);
-              if (res.code === CODE.ResponseCodeOk) {
-                Message.success('编辑用户成功');
-                refetch();
-                modal.hide();
-              }
+              updateUser({
+                ...v,
+                id: record.id,
+              });
             } else {
-              const res = await runCreateUser(v as CreateUserRequest);
-              if (res.code === CODE.ResponseCodeOk) {
-                Message.success('创建用户成功');
-                refetch();
-                modal.hide();
-              }
+              runCreateUser(v);
             }
           }}
         >

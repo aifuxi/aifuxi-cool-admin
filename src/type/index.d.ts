@@ -25,6 +25,6 @@ export type PaginationRequest = {
 };
 
 export type OrderRequest = {
-  order: 'desc' | 'asc';
-  order_by: 'created_at' | 'updated_at';
+  order: string;
+  order_by: string;
 };

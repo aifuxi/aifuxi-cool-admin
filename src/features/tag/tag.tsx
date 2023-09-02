@@ -11,8 +11,6 @@ import {
   Typography,
 } from '@arco-design/web-react';
 import NiceModal from '@ebay/nice-modal-react';
-import { useRequest } from 'ahooks';
-import useSWR from 'swr';
 
 import {
   IconAddSquareBoldDuotone,
@@ -21,8 +19,9 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
-import { CODE } from '@/constants/code';
-import { deleteTagByID, getTags } from '@/services/tag';
+import { ORDER_BY_ENUM, ORDER_ENUM } from '@/constants/unknown.ts';
+import { defaultGetTagsReq } from '@/features/tag/config.ts';
+import { useDeleteTag, useTags } from '@/features/tag/hooks.ts';
 import { GetTagsRequest, Tag } from '@/type/tag';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
@@ -34,21 +33,22 @@ const FormItem = Form.Item;
 
 export const TagPage = () => {
   const [form] = Form.useForm();
-  const [req, setReq] = useState<GetTagsRequest>({
-    page: 1,
-    page_size: 10,
-    order: 'desc',
-    order_by: 'created_at',
-  });
-  const { data, isValidating, mutate } = useSWR(
-    '/auth/tags' + JSON.stringify(req),
-    () => getTags(req),
-  );
-  const { loading: deleteLoading, runAsync: deleteTag } = useRequest(
-    deleteTagByID,
-    {
-      manual: true,
-    },
+  const [req, setReq] = useState<GetTagsRequest>(defaultGetTagsReq);
+
+  const { data, refetch, isError, isLoading } = useTags(req);
+  const handleDeleteTagSuccess = async () => {
+    Message.success('删除成功');
+
+    await refetch();
+
+    if (data?.data) {
+      if (req.page > 1) {
+        setReq({ ...req, page: req.page - 1 });
+      }
+    }
+  };
+  const { mutate: deleteTag, isLoading: deleteLoading } = useDeleteTag(
+    handleDeleteTagSuccess,
   );
 
   const columns: TableColumnProps<Tag>[] = [
@@ -70,18 +70,18 @@ export const TagPage = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'created_at',
+      dataIndex: ORDER_BY_ENUM.CREATED_AT,
       sorter: true,
-      sortOrder: getTableOrder(req, 'created_at'),
+      sortOrder: getTableOrder(req, ORDER_BY_ENUM.CREATED_AT),
       render: (_, record) => (
         <Typography.Text>{formatTime(record.created_at)}</Typography.Text>
       ),
     },
     {
       title: '更新时间',
-      dataIndex: 'updated_at',
+      dataIndex: ORDER_BY_ENUM.UPDATED_AT,
       sorter: true,
-      sortOrder: getTableOrder(req, 'updated_at'),
+      sortOrder: getTableOrder(req, ORDER_BY_ENUM.UPDATED_AT),
       render: (_, record) => (
         <Typography.Text>{formatTime(record.updated_at)}</Typography.Text>
       ),
@@ -94,7 +94,7 @@ export const TagPage = () => {
             type="text"
             icon={<IconPenNewSquareBoldDuotone />}
             onClick={() => {
-              NiceModal.show(CreateTagModal, { record, refresh: mutate });
+              NiceModal.show(CreateTagModal, { record, refetch });
             }}
           >
             编辑
@@ -111,18 +111,8 @@ export const TagPage = () => {
                 okButtonProps: {
                   status: 'danger',
                 },
-                onOk: async () => {
-                  const res = await deleteTag(record.id);
-                  if (res.code === CODE.ResponseCodeOk) {
-                    Message.success('删除成功');
-
-                    const currentPageRes = await mutate();
-                    if (!currentPageRes?.data?.length) {
-                      if (req.page > 1) {
-                        setReq({ ...req, page: req.page - 1 });
-                      }
-                    }
-                  }
+                onOk: () => {
+                  deleteTag(record.id);
                 },
               });
             }}
@@ -133,6 +123,11 @@ export const TagPage = () => {
       ),
     },
   ];
+
+  if (isError) {
+    // TODO: 兜底出错情况
+    return <div>出错了</div>;
+  }
 
   return (
     <div>
@@ -146,7 +141,7 @@ export const TagPage = () => {
           icon={<IconAddSquareBoldDuotone />}
           size="large"
           onClick={() => {
-            NiceModal.show(CreateTagModal, { refresh: mutate });
+            NiceModal.show(CreateTagModal, { refetch });
           }}
         >
           创建标签
@@ -163,12 +158,7 @@ export const TagPage = () => {
         }}
         onReset={() => {
           form.resetFields();
-          setReq({
-            page: 1,
-            page_size: 10,
-            order: 'desc',
-            order_by: 'created_at',
-          });
+          setReq(defaultGetTagsReq);
         }}
       >
         <FormItem label="标签名称" field="name">
@@ -204,7 +194,7 @@ export const TagPage = () => {
       </Form>
 
       <Table
-        loading={isValidating}
+        loading={isLoading}
         rowKey={(record) => record.id}
         columns={columns}
         data={data?.data || []}
@@ -220,7 +210,6 @@ export const TagPage = () => {
           },
         }}
         onChange={(_, sorter) => {
-          console.log(sorter);
           if (Array.isArray(sorter)) {
             return;
           }
@@ -232,17 +221,17 @@ export const TagPage = () => {
           }
 
           if (field === req.order_by) {
-            if (req.order === 'desc') {
-              setReq({ ...req, order: 'asc' });
+            if (req.order === ORDER_ENUM.DESC) {
+              setReq({ ...req, order: ORDER_ENUM.ASC });
             }
-            if (req.order === 'asc') {
-              setReq({ ...req, order: 'desc' });
+            if (req.order === ORDER_ENUM.ASC) {
+              setReq({ ...req, order: ORDER_ENUM.DESC });
             }
           } else {
             setReq({
               ...req,
               order_by: field as GetTagsRequest['order_by'],
-              order: 'desc',
+              order: ORDER_ENUM.DESC,
             });
           }
         }}

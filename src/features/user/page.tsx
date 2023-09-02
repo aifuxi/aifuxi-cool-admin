@@ -20,27 +20,38 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
-import { CODE } from '@/constants/code';
+import { ORDER_ENUM } from '@/constants/unknown.ts';
+import { defaultGetUsersReq } from '@/features/user/config.ts';
+import { GetTagsRequest } from '@/type/tag';
 import { GetUsersRequest, User } from '@/type/user';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';
 
 import { CreateUserModal } from './create-user-modal';
-import { useDeleteUserByID, useUsers } from './hooks';
+import { useDeleteUser, useUsers } from './hooks';
 
 const ButtonGroup = Button.Group;
 const FormItem = Form.Item;
 
 export const UserPage = () => {
   const [form] = Form.useForm();
-  const [req, setReq] = useState<GetUsersRequest>({
-    page: 1,
-    page_size: 10,
-    order: 'desc',
-    order_by: 'created_at',
-  });
-  const { users, total, isFetching, refetch } = useUsers(req);
-  const { deleteLoading, deleteUser } = useDeleteUserByID();
+  const [req, setReq] = useState<GetUsersRequest>(defaultGetUsersReq);
+
+  const { data, refetch, isError, isLoading } = useUsers(req);
+  const handleDeleteUserSuccess = async () => {
+    Message.success('删除成功');
+
+    await refetch();
+
+    if (data?.data) {
+      if (req.page > 1) {
+        setReq({ ...req, page: req.page - 1 });
+      }
+    }
+  };
+  const { mutate: deleteUser, isLoading: deleteLoading } = useDeleteUser(
+    handleDeleteUserSuccess,
+  );
 
   const columns: TableColumnProps<User>[] = [
     {
@@ -105,18 +116,8 @@ export const UserPage = () => {
                 okButtonProps: {
                   status: 'danger',
                 },
-                onOk: async () => {
-                  const res = await deleteUser(record.id);
-                  if (res.code === CODE.ResponseCodeOk) {
-                    Message.success('删除成功');
-
-                    const currentPageRes = await refetch();
-                    if (!currentPageRes?.data?.length) {
-                      if (req.page > 1) {
-                        setReq({ ...req, page: req.page - 1 });
-                      }
-                    }
-                  }
+                onOk: () => {
+                  deleteUser(record.id);
                 },
               });
             }}
@@ -127,6 +128,11 @@ export const UserPage = () => {
       ),
     },
   ];
+
+  if (isError) {
+    // TODO: 兜底出错情况
+    return <div>出错了</div>;
+  }
 
   return (
     <div>
@@ -157,12 +163,7 @@ export const UserPage = () => {
         }}
         onReset={() => {
           form.resetFields();
-          setReq({
-            page: 1,
-            page_size: 10,
-            order: 'desc',
-            order_by: 'created_at',
-          });
+          setReq(defaultGetUsersReq);
         }}
       >
         <FormItem label="用户昵称" field="nickname">
@@ -198,12 +199,12 @@ export const UserPage = () => {
       </Form>
 
       <Table
-        loading={isFetching}
+        loading={isLoading}
         rowKey={(record) => record.id}
         columns={columns}
-        data={users}
+        data={data?.data || []}
         pagination={{
-          total,
+          total: data?.total,
           showTotal: true,
           current: req.page,
           pageSize: req.page_size,
@@ -226,17 +227,17 @@ export const UserPage = () => {
           }
 
           if (field === req.order_by) {
-            if (req.order === 'desc') {
-              setReq({ ...req, order: 'asc' });
+            if (req.order === ORDER_ENUM.DESC) {
+              setReq({ ...req, order: ORDER_ENUM.ASC });
             }
-            if (req.order === 'asc') {
-              setReq({ ...req, order: 'desc' });
+            if (req.order === ORDER_ENUM.ASC) {
+              setReq({ ...req, order: ORDER_ENUM.DESC });
             }
           } else {
             setReq({
               ...req,
-              order_by: field as GetUsersRequest['order_by'],
-              order: 'desc',
+              order_by: field as GetTagsRequest['order_by'],
+              order: ORDER_ENUM.DESC,
             });
           }
         }}

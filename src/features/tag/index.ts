@@ -1,3 +1,4 @@
+import { useTags } from './hooks';
 import { TagPage } from './tag';
 
-export { TagPage };
+export { TagPage, useTags };
