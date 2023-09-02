@@ -19,8 +19,7 @@ import {
   IconUserRoundedBoldDuotone,
 } from '@/components/icons';
 import { ROUTE_PATH } from '@/constants/path';
-import { useUserProfileStore } from '@/store/user-profile';
-import { removeBearerToken } from '@/utils/helper';
+import { useCurrentUserStore } from '@/store/current-user.ts';
 
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 
@@ -35,9 +34,9 @@ export const MainLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState<string[]>([]);
-  const userProfile = useUserProfileStore((state) => state.user);
-  const clearUserProfile = useUserProfileStore(
-    (state) => state.clearUserProfile,
+  const userProfile = useCurrentUserStore((state) => state.user);
+  const clearCurrentUser = useCurrentUserStore(
+    (state) => state.clearCurrentUser,
   );
 
   useEffect(() => {
@@ -50,7 +49,7 @@ export const MainLayout = () => {
         <div className="w-full h-full flex items-center space-x-2">
           <Button
             status="danger"
-            type='text'
+            type="text"
             icon={<IconLogout2BoldDuotone />}
             onClick={() => {
               Modal.confirm({
@@ -60,8 +59,7 @@ export const MainLayout = () => {
                   status: 'danger',
                 },
                 onOk: async () => {
-                  clearUserProfile();
-                  removeBearerToken();
+                  clearCurrentUser();
                   navigate(ROUTE_PATH.LOGIN, { replace: true });
                 },
               });

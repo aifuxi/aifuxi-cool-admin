@@ -4,8 +4,8 @@ import axios from 'axios';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { REDIRECT } from '@/constants/unknown';
+import { useCurrentUserStore } from '@/store/current-user.ts';
 
-import { getBearerToken, removeBearerToken } from './helper';
 import { obj2QueryString } from './url';
 
 export const x = axios.create({
@@ -15,7 +15,7 @@ export const x = axios.create({
 x.interceptors.request.use(
   function (config) {
     // Do something before request is sent
-    const token = getBearerToken();
+    const token = useCurrentUserStore.getState().accessToken;
     if (config.url?.includes('/auth') && token) {
       config.headers.Authorization = token;
     }
@@ -44,12 +44,12 @@ x.interceptors.response.use(
     Message.error(response.data.msg);
 
     if (needRedirectCode.includes(response.data.code)) {
-      removeBearerToken();
+      useCurrentUserStore.getState().clearCurrentUser();
 
       window.setTimeout(() => {
         const query = obj2QueryString({ [REDIRECT]: location.pathname });
         location.href = `${ROUTE_PATH.LOGIN}${query}`;
-      }, 1 * 1000);
+      }, 1000);
     }
 
     return Promise.reject(new Error(response.data.msg));
