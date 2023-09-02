@@ -20,8 +20,8 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
-import { ORDER_ENUM } from '@/constants/unknown.ts';
-import { defaultGetUsersReq } from '@/features/user/config.ts';
+import { ORDER_ENUM } from '@/constants/unknown';
+import { defaultGetUsersReq } from '@/features/user/config';
 import { GetTagsRequest } from '@/type/tag';
 import { GetUsersRequest, User } from '@/type/user';
 import { getTableOrder } from '@/utils/helper';

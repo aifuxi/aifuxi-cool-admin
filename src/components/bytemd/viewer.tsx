@@ -1,5 +1,6 @@
+import React, { useEffect } from 'react';
+
 import { Viewer } from '@bytemd/react';
-import { useMount } from 'ahooks';
 
 import { plugins } from './config';
 
@@ -8,7 +9,7 @@ type Props = {
 };
 
 const BytemdViewer: React.FC<Props> = ({ content }) => {
-  useMount(() => {
+  useEffect(() => {
     /** 立即执行函数 IIFE避免变量全局污染 */
     (function () {
       /**

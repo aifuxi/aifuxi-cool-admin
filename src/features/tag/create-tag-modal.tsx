@@ -1,7 +1,7 @@
 import { Button, Form, Input, Message, Modal } from '@arco-design/web-react';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 
-import { useCreateTag, useUpdateTag } from '@/features/tag/hooks.ts';
+import { useCreateTag, useUpdateTag } from '@/features/tag/hooks';
 import { Tag } from '@/type/tag';
 
 const FormItem = Form.Item;

@@ -17,8 +17,8 @@ import {
 import { BytemdEditor } from '@/components/bytemd';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
-import { getAllTagsReq } from '@/features/article/config.ts';
-import { useTags } from '@/features/tag/hooks.ts';
+import { getAllTagsReq } from '@/features/article/config';
+import { useTags } from '@/features/tag/hooks';
 import { uploadFile } from '@/services/upload';
 import { genUploadItems } from '@/utils/helper';
 

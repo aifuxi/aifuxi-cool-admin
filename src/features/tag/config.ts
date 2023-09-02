@@ -1,4 +1,4 @@
-import { ORDER_BY_ENUM, ORDER_ENUM } from '@/constants/unknown.ts';
+import { ORDER_BY_ENUM, ORDER_ENUM } from '@/constants/unknown';
 import { GetTagsRequest } from '@/type/tag';
 
 export const defaultGetTagsReq: GetTagsRequest = {

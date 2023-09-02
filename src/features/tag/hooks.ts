@@ -5,7 +5,7 @@ import {
   deleteTagByID,
   getTags,
   updateTagByID,
-} from '@/services/tag.ts';
+} from '@/services/tag';
 import { CreateTagRequest, GetTagsRequest, UpdateTagRequest } from '@/type/tag';
 
 export const useTags = (req: GetTagsRequest) => {

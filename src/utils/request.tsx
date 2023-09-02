@@ -4,7 +4,7 @@ import axios from 'axios';
 import { CODE } from '@/constants/code';
 import { ROUTE_PATH } from '@/constants/path';
 import { REDIRECT } from '@/constants/unknown';
-import { useCurrentUserStore } from '@/store/current-user.ts';
+import { useCurrentUserStore } from '@/store/current-user';
 
 import { obj2QueryString } from './url';
 

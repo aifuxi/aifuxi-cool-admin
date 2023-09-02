@@ -19,9 +19,9 @@ import {
   IconRestartSquareBoldDuotone,
   IconTrashBinTrashBoldDuotone,
 } from '@/components/icons';
-import { ORDER_BY_ENUM, ORDER_ENUM } from '@/constants/unknown.ts';
-import { defaultGetTagsReq } from '@/features/tag/config.ts';
-import { useDeleteTag, useTags } from '@/features/tag/hooks.ts';
+import { ORDER_BY_ENUM, ORDER_ENUM } from '@/constants/unknown';
+import { defaultGetTagsReq } from '@/features/tag/config';
+import { useDeleteTag, useTags } from '@/features/tag/hooks';
 import { GetTagsRequest, Tag } from '@/type/tag';
 import { getTableOrder } from '@/utils/helper';
 import { formatTime } from '@/utils/time';

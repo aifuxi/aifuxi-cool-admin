@@ -19,7 +19,7 @@ import {
   IconUserRoundedBoldDuotone,
 } from '@/components/icons';
 import { ROUTE_PATH } from '@/constants/path';
-import { useCurrentUserStore } from '@/store/current-user.ts';
+import { useCurrentUserStore } from '@/store/current-user';
 
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 

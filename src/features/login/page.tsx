@@ -8,7 +8,7 @@ import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/components/icons';
 import { ROUTE_PATH } from '@/constants/path';
 import { REDIRECT } from '@/constants/unknown';
 import { signIn } from '@/services/auth';
-import { useCurrentUserStore } from '@/store/current-user.ts';
+import { useCurrentUserStore } from '@/store/current-user';
 import { SignInRequest } from '@/type';
 import { cn, genBearerToken } from '@/utils/helper';
 
