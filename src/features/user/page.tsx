@@ -13,6 +13,7 @@ import {
 } from '@arco-design/web-react';
 import NiceModal from '@ebay/nice-modal-react';
 
+import { EmptyRequestError } from '@/components/empty';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
@@ -37,7 +38,7 @@ export const UserPage = () => {
   const [form] = Form.useForm();
   const [req, setReq] = useState<GetUsersRequest>(defaultGetUsersReq);
 
-  const { data, refetch, isError, isLoading } = useUsers(req);
+  const { data, refetch, isError, isLoading, error } = useUsers(req);
   const handleDeleteUserSuccess = async () => {
     Message.success('删除成功');
 
@@ -130,8 +131,12 @@ export const UserPage = () => {
   ];
 
   if (isError) {
-    // TODO: 兜底出错情况
-    return <div>出错了</div>;
+    return (
+      <EmptyRequestError
+        refetch={refetch}
+        error={(error as object).toString()}
+      />
+    );
   }
 
   return (

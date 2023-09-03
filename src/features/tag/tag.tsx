@@ -12,6 +12,7 @@ import {
 } from '@arco-design/web-react';
 import NiceModal from '@ebay/nice-modal-react';
 
+import { EmptyRequestError } from '@/components/empty';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
@@ -35,7 +36,7 @@ export const TagPage = () => {
   const [form] = Form.useForm();
   const [req, setReq] = useState<GetTagsRequest>(defaultGetTagsReq);
 
-  const { data, refetch, isError, isLoading } = useTags(req);
+  const { data, refetch, isError, isLoading, error } = useTags(req);
   const handleDeleteTagSuccess = async () => {
     Message.success('删除成功');
 
@@ -125,8 +126,12 @@ export const TagPage = () => {
   ];
 
   if (isError) {
-    // TODO: 兜底出错情况
-    return <div>出错了</div>;
+    return (
+      <EmptyRequestError
+        refetch={refetch}
+        error={(error as object).toString()}
+      />
+    );
   }
 
   return (

@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@arco-design/web-react';
 
+import { EmptyRequestError } from '@/components/empty';
 import {
   IconAddSquareBoldDuotone,
   IconMinimalisticMagniferBoldDuotone,
@@ -36,7 +37,7 @@ export const ArticlePage = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [req, setReq] = useState<GetArticlesRequest>(defaultGetArticlesReq);
-  const { data, refetch, isError, isLoading } = useArticles(req);
+  const { data, refetch, isError, isLoading, error } = useArticles(req);
   const handleDeleteArticleSuccess = async () => {
     Message.success('删除成功');
 
@@ -166,8 +167,12 @@ export const ArticlePage = () => {
   ];
 
   if (isError) {
-    // TODO: 兜底出错情况
-    return <div>出错了</div>;
+    return (
+      <EmptyRequestError
+        refetch={refetch}
+        error={(error as object).toString()}
+      />
+    );
   }
 
   return (

@@ -1,4 +1,4 @@
-import { Message } from '@arco-design/web-react';
+import { Notification } from '@arco-design/web-react';
 import axios from 'axios';
 
 import { CODE } from '@/constants/code';
@@ -41,7 +41,11 @@ x.interceptors.response.use(
       CODE.ResponseCodeNoAuthorized,
       CODE.ResponseCodeTokenExpired,
     ];
-    Message.error(response.data.msg);
+
+    Notification.error({
+      title: 'Error',
+      content: response.data.msg,
+    });
 
     if (needRedirectCode.includes(response.data.code)) {
       useCurrentUserStore.getState().clearCurrentUser();
