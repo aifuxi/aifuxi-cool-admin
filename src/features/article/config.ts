@@ -11,7 +11,7 @@ export const defaultGetArticlesReq: GetArticlesRequest = {
 
 export const getAllTagsReq: GetTagsRequest = {
   page: 1,
-  page_size: 200,
+  page_size: 100,
   order: 'desc',
   order_by: 'created_at',
 };

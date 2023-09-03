@@ -7,7 +7,7 @@ import {
   Form,
   Input,
   InputNumber,
-  Message,
+  Notification,
   Switch,
   Tag,
   Typography,
@@ -41,7 +41,11 @@ export const ArticleCreateOrEditPage = () => {
     }
 
     navigate(ROUTE_PATH.ARTICLE_LIST);
-    Message.success(msg);
+
+    Notification.success({
+      title: 'Success',
+      content: msg,
+    });
   };
 
   const { mutateAsync: runCreateArticle, isLoading: createLoading } =
@@ -143,9 +147,15 @@ export const ArticleCreateOrEditPage = () => {
               if (res.code === CODE.ResponseCodeOk && res.data) {
                 onSuccess({ url: res.data });
                 setCover(res.data);
-                Message.success('上传成功');
+                Notification.success({
+                  title: 'Success',
+                  content: '上传成功',
+                });
               } else {
-                Message.error('上传失败');
+                Notification.error({
+                  title: 'Success',
+                  content: '上传失败',
+                });
               }
             }}
           />

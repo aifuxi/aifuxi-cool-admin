@@ -1,7 +1,13 @@
 import { useMutation } from 'react-query';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { Button, Form, Input, Layout, Message } from '@arco-design/web-react';
+import {
+  Button,
+  Form,
+  Input,
+  Layout,
+  Notification,
+} from '@arco-design/web-react';
 
 import TechLifeManagementPng from '@/assets/images/tech-life-management.png';
 import { IconLetterBoldDuotone, IconLockBoldDuotone } from '@/components/icons';
@@ -26,7 +32,11 @@ export const LoginPage = () => {
       onSuccess(res) {
         if (res.data?.access_token) {
           setCurrentUser(res.data.user, genBearerToken(res.data.access_token));
-          Message.success('登录成功');
+
+          Notification.success({
+            title: '登录成功',
+            content: `欢迎回来，${res.data.user.nickname}`,
+          });
           if (redirectPath) {
             navigate(redirectPath);
           } else {
@@ -34,9 +44,12 @@ export const LoginPage = () => {
             navigate(ROUTE_PATH.HOME);
           }
         } else {
-          Message.clear();
+          Notification.clear();
           // 弹错误消息
-          Message.error(res.msg || '系统错误');
+          Notification.error({
+            title: 'Error',
+            content: res.msg || '系统错误',
+          });
         }
       },
     },
@@ -62,7 +75,7 @@ export const LoginPage = () => {
           layout="vertical"
           size="large"
           initialValues={
-            { email: 'aifuxi@qq.com', password: '123456' } as SignInRequest
+            { email: 'aifuxi@email.com', password: '123456' } as SignInRequest
           }
           autoComplete="off"
           onSubmit={(v: SignInRequest) => {
