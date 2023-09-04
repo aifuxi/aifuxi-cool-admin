@@ -8,3 +8,8 @@ export const CODE = {
 	ResponseCodeTokenExpired           : 1004,
 	ResponseCodeInvalidEmailOrPassword : 1005,
 };
+
+
+export const KEYBOARD_CODE = {
+  ENTER: 13
+} 

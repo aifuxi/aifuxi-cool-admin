@@ -68,7 +68,7 @@ export const ArticlePage = () => {
       title: '文章封面',
       render: (_, record) =>
         record.cover ? (
-          <Image width={80} src={record.cover} alt={record.title} />
+          <Image width={128} className="!rounded-none" src={record.cover} alt={record.title} />
         ) : (
           <Typography.Text>-</Typography.Text>
         ),

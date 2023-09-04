@@ -137,6 +137,9 @@ export const ArticleCreateOrEditPage = () => {
             listType={'picture-card'}
             limit={1}
             accept="image/*"
+            onRemove={() => {
+              setCover('');
+            }}
             customRequest={async (option) => {
               const { onSuccess, file } = option;
 
@@ -160,6 +163,18 @@ export const ArticleCreateOrEditPage = () => {
             }}
           />
         </FormItem>
+        <div className='pb-4'>
+          <div className='pb-2'>或</div>
+          <Input
+          placeholder="请输入封面链接"
+          value={cover}
+          onChange={(v) => {
+            setCover(v);
+            form.setFieldValue('cover', genUploadItems([v]));
+          }}
+        />
+        </div>
+
         <FormItem label="是否置顶" field="is_top" triggerPropName="checked">
           <Switch />
         </FormItem>
